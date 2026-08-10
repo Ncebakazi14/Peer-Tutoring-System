@@ -1,6 +1,8 @@
 package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.*;
+import org.apache.catalina.User;
+
 import java.time.LocalDate;
 
 @Entity
