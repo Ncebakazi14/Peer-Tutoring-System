@@ -14,5 +14,4 @@ public interface ReviewService {
     List<Review> findAll();
 
     void delete(Long id);
-
 }

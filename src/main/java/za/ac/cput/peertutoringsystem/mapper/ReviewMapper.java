@@ -12,6 +12,7 @@ public class ReviewMapper {
                 review.getComment(),
                 review.getReviewDate(),
                 review.isAnonymous()
+
         );
     }
 }
