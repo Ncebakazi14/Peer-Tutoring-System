@@ -1,4 +1,4 @@
-package za.ac.cput.peertutoringsystem.entity;
+package za.ac.cput.peertutoringsystem.domain;
 
 public enum SessionStatus {
     SCHEDULED,
@@ -6,4 +6,3 @@ public enum SessionStatus {
     COMPLETED,
     CANCELLED
 }
-

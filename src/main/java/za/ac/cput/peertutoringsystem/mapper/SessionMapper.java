@@ -1,7 +1,7 @@
 package za.ac.cput.peertutoringsystem.mapper;
 
+import za.ac.cput.peertutoringsystem.domain.Session;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
-import za.ac.cput.peertutoringsystem.entity.Session;
 
 public final class SessionMapper {
 

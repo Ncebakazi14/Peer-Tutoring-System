@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
-import za.ac.cput.peertutoringsystem.entity.SessionStatus;
 import za.ac.cput.peertutoringsystem.service.SessionService;
 
 import java.util.List;

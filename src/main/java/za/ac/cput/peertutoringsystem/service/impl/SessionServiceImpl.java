@@ -2,10 +2,10 @@ package za.ac.cput.peertutoringsystem.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import za.ac.cput.peertutoringsystem.domain.Session;
+import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
-import za.ac.cput.peertutoringsystem.entity.Session;
-import za.ac.cput.peertutoringsystem.entity.SessionStatus;
 import za.ac.cput.peertutoringsystem.exception.ForbiddenOperationException;
 import za.ac.cput.peertutoringsystem.exception.InvalidSessionTimeException;
 import za.ac.cput.peertutoringsystem.exception.ResourceNotFoundException;

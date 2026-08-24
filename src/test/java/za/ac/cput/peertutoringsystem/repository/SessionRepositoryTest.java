@@ -1,13 +1,13 @@
 package za.ac.cput.peertutoringsystem.repository;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import za.ac.cput.peertutoringsystem.entity.Session;
-import za.ac.cput.peertutoringsystem.entity.SessionStatus;
+import za.ac.cput.peertutoringsystem.domain.Session;
+import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 

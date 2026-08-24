@@ -1,8 +1,8 @@
 package za.ac.cput.peertutoringsystem.service;
 
+import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
-import za.ac.cput.peertutoringsystem.entity.SessionStatus;
 
 import java.util.List;
 

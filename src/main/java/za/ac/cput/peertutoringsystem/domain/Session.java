@@ -1,4 +1,4 @@
-package za.ac.cput.peertutoringsystem.entity;
+package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -149,4 +149,3 @@ public class Session {
         this.topic = topic;
     }
 }
-

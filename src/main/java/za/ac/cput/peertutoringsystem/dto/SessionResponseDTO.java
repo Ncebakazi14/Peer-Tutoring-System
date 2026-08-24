@@ -1,6 +1,6 @@
 package za.ac.cput.peertutoringsystem.dto;
 
-import za.ac.cput.peertutoringsystem.entity.SessionStatus;
+import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 
 import java.time.LocalDateTime;
 
