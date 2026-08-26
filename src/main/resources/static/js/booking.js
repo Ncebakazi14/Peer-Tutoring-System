@@ -55,9 +55,17 @@ const TUTORS = [
 
 const STORAGE_KEY = 'peer_tutor_bookings';
 
-function getBookings() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored ? JSON.parse(stored) : [];
+async function getBookings() {
+  try {
+    const response = await fetch('/api/bookings');
+    if (!response.ok) {
+      throw new Error('Failed to load bookings');
+    }
+    return await response.json();
+  } catch (error) {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
 }
 
 function saveBookings(bookings) {
@@ -197,8 +205,8 @@ function initTutorBooking() {
     bookingModal.setAttribute('aria-hidden', 'true');
   }
 
-  function renderBookings() {
-    const bookings = getBookings();
+  async function renderBookings() {
+    const bookings = await getBookings();
     bookingCount.textContent = String(bookings.length);
 
     if (!bookings.length) {
@@ -210,10 +218,10 @@ function initTutorBooking() {
       <article class="booking-item">
         <div class="booking-top">
           <span>${booking.tutorName}</span>
-          <span class="booking-status">${booking.status}</span>
+          <span class="booking-status">${booking.status || 'Confirmed'}</span>
         </div>
         <p>${booking.subject}</p>
-        <small>${booking.date} • ${booking.time}</small>
+        <small>${booking.bookingDate || booking.date} • ${booking.bookingTime || booking.time}</small>
         <small>R${booking.amount}</small>
       </article>
     `).join('');
@@ -240,27 +248,45 @@ function initTutorBooking() {
   }
 
   if (confirmBookingBtn) {
-    confirmBookingBtn.addEventListener('click', () => {
+    confirmBookingBtn.addEventListener('click', async () => {
       const tutor = TUTORS.find((item) => item.id === selectedTutorId) || TUTORS[0];
       const selectedDate = bookingDate.value || new Date().toISOString().split('T')[0];
       const selectedTime = bookingTime.value || '18:00';
       const sessionType = bookingType.value || 'Revision';
 
       const booking = {
-        id: Date.now(),
         tutorId: tutor.id,
         tutorName: tutor.name,
         subject: tutor.subject,
         amount: tutor.price,
-        date: new Date(selectedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-        time: `${selectedTime} • ${sessionType}`,
+        bookingDate: selectedDate,
+        bookingTime: selectedTime,
+        sessionType: sessionType,
         status: 'Confirmed'
       };
 
-      const bookings = getBookings();
-      bookings.unshift(booking);
-      saveBookings(bookings);
-      renderBookings();
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(booking)
+        });
+
+        if (!response.ok) {
+          throw new Error('Booking request failed');
+        }
+      } catch (error) {
+        const bookings = await getBookings();
+        bookings.unshift({
+          ...booking,
+          id: Date.now(),
+          date: new Date(selectedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          time: `${selectedTime} • ${sessionType}`
+        });
+        saveBookings(bookings);
+      }
+
+      await renderBookings();
       closeBookingModalPanel();
     });
   }
