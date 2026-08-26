@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peer Tutoring | Student Booking</title>
+    <link rel="stylesheet" href="/css/booking.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">T</div>
+          <div>
+            <strong>PEER TUTORING</strong>
+            <small>Student portal</small>
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <a href="#">Dashboard</a>
+          <a href="#" class="active">My Bookings</a>
+          <a href="#">Messages</a>
+          <a href="#">Notifications</a>
+          <a href="#">Settings</a>
+          <a href="#">Logout</a>
+        </nav>
+
+        <div class="user-card">
+          <div class="user-card__avatar">S</div>
+          <div>
+            <strong>Student</strong>
+            <small>Welcome back</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Student tutoring</p>
+            <h1>Book a tutor</h1>
+          </div>
+          <button id="newBookingBtn" class="primary-btn" type="button">+ New booking</button>
+        </header>
+
+        <section class="content-grid">
+          <div class="panel-card tutor-panel">
+            <div class="panel-header">
+              <h3>Browse tutors</h3>
+              <a href="#">View all</a>
+            </div>
+
+            <div class="search-wrap">
+              <input id="tutorSearch" type="text" placeholder="Search by name or subject" />
+              <select id="subjectFilter">
+                <option value="all">All subjects</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+
+            <div id="tutorList" class="tutor-list"></div>
+          </div>
+
+          <div class="panel-card profile-panel">
+            <div class="panel-header compact">
+              <h3>Tutor profile</h3>
+              <span class="rating-pill">⭐ 4.8</span>
+            </div>
+            <div id="tutorProfile" class="tutor-profile"></div>
+          </div>
+
+          <div class="panel-card bookings-panel">
+            <div class="panel-header compact">
+              <h3>My bookings</h3>
+              <span id="bookingCount" class="booking-count">0</span>
+            </div>
+            <div id="bookingList" class="booking-list"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="bookingModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Book a session</h3>
+          <button id="closeBookingModal" type="button" class="icon-btn" aria-label="Close">×</button>
+        </div>
+
+        <div class="booking-summary">
+          <div>
+            <span>Tutor</span>
+            <strong id="bookingTutorName">Selected tutor</strong>
+          </div>
+          <div>
+            <span>Rate</span>
+            <strong id="bookingTutorPrice">R0/session</strong>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="bookingDate">Date</label>
+          <input id="bookingDate" type="date" />
+        </div>
+
+        <div class="field-group">
+          <label for="bookingTime">Time</label>
+          <input id="bookingTime" type="time" value="18:00" />
+        </div>
+
+        <div class="field-group">
+          <label for="bookingType">Session type</label>
+          <select id="bookingType">
+            <option value="Revision">Revision</option>
+            <option value="Exam prep">Exam prep</option>
+            <option value="Homework help">Homework help</option>
+            <option value="Coding lab">Coding lab</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button id="cancelBooking" type="button" class="secondary-btn">Cancel</button>
+          <button id="confirmBooking" type="button" class="primary-btn">Confirm booking</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/booking.js"></script>
+  </body>
+</html>
