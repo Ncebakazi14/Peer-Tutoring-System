@@ -10,8 +10,11 @@ import za.ac.cput.peertutoringsystem.service.IStudentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/students")
 public class StudentController {
 
