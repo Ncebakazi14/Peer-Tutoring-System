@@ -6,9 +6,17 @@ import java.time.LocalDate;
 
 public class ReviewFactory {
 
-    public static Review CreateReview(Long reviewId , Integer rating,String comment, LocalDate reviewDate, boolean isAnonymous) {
+    public static Review createReview(int rating, String comment, boolean isAnonymous, Long sessionId, Long tutorProfileId) {
+        if (rating < 1 || rating > 5) {
+            return null;
+        }
 
-        return new Review(reviewId,rating,comment,reviewDate,isAnonymous);
-
+        return new Review(
+                rating,
+                comment,
+                isAnonymous,
+                sessionId,
+                tutorProfileId
+        );
     }
 }

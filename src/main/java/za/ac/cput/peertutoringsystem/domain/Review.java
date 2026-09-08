@@ -2,6 +2,7 @@ package za.ac.cput.peertutoringsystem.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -10,93 +11,57 @@ import java.util.Objects;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "session_id", nullable = false)
-//    private Session session;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "tutor_profile_id", nullable = false)
-//    private TutorProfile tutorProfile;
-//    @Column(nullable = false)
+    private Long id;
+
     private int rating;
+
+    @Column(length = 1000)
     private String comment;
-    private LocalDate reviewDate;
-    private boolean isAnonymous = false;
+
+    private boolean anonymous;
+
+    @Column(nullable = false)
+    private Long sessionId;
+
+    @Column(nullable = false)
+    private Long tutorProfileId;
+
+    private LocalDateTime createdAt;
 
     public Review() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    public Review(Long reviewId, int rating, String comment, LocalDate reviewDate, boolean isAnonymous) {
-        this.reviewId = reviewId;
-        this.student = new Student();
+    public Review(int rating, String comment, boolean anonymous, Long sessionId, Long tutorProfileId) {
         this.rating = rating;
         this.comment = comment;
-        this.reviewDate = reviewDate;
-        this.isAnonymous = isAnonymous;
+        this.anonymous = anonymous;
+        this.sessionId = sessionId;
+        this.tutorProfileId = tutorProfileId;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public Long getReviewId() {
-        return reviewId;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Student getStudent() {
-        return student;
-    }
+    public int getRating() { return rating; }
+    public void setRating(int rating) { this.rating = rating; }
 
-    public int getRating() {
-        return rating;
-    }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 
-    public String getComment() {
-        return comment;
-    }
+    public boolean isAnonymous() { return anonymous; }
+    public void setAnonymous(boolean anonymous) { this.anonymous = anonymous; }
 
-    public LocalDate getReviewDate() {
-        return reviewDate;
-    }
+    public Long getSessionId() { return sessionId; }
+    public void setSessionId(Long sessionId) { this.sessionId = sessionId; }
 
-    public boolean isAnonymous() {
-        return isAnonymous;
-    }
+    public Long getTutorProfileId() { return tutorProfileId; }
+    public void setTutorProfileId(Long tutorProfileId) { this.tutorProfileId = tutorProfileId; }
 
-    public void setReviewId(Long reviewId) {
-        this.reviewId = reviewId;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
 
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setReviewDate(LocalDate reviewDate) {
-        this.reviewDate = reviewDate;
-    }
-
-    public void setAnonymous(boolean anonymous) {
-        isAnonymous = anonymous;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Review review = (Review) o;
-        return Objects.equals(reviewId, review.reviewId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(reviewId);
-    }
-
+    
 }

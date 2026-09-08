@@ -1,16 +1,18 @@
 package za.ac.cput.peertutoringsystem.mapper;
 
+import org.springframework.stereotype.Component;
 import za.ac.cput.peertutoringsystem.domain.Review;
 import za.ac.cput.peertutoringsystem.dto.ReviewResponseDTO;
 
+@Component
 public class ReviewMapper {
     public ReviewResponseDTO toDTO(Review review) {
         if (review == null) return null;
         return new ReviewResponseDTO(
-                review.getReviewId(),
+                review.getId(),
                 review.getRating(),
                 review.getComment(),
-                review.getReviewDate(),
+                review.getCreatedAt() != null ? review.getCreatedAt().toLocalDate() : null,
                 review.isAnonymous()
 
         );
