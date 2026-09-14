@@ -41,7 +41,20 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+                        // Authentication endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Public frontend pages
+                        .requestMatchers(
+                                "/",
+                                "/booking.html",
+                                "/index.html",
+                                "/css/**",
+                                "/js/**",
+                                "/favicon.ico"
+                        ).permitAll()
+
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
 
