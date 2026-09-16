@@ -1,6 +1,5 @@
 package za.ac.cput.peertutoringsystem.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +16,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -41,16 +39,18 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        // Authentication endpoints
+
+                        // Login and registration
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Public frontend pages
+                        // Frontend pages and files
                         .requestMatchers(
                                 "/",
                                 "/booking.html",
                                 "/index.html",
                                 "/css/**",
                                 "/js/**",
+                                "/images/**",
                                 "/favicon.ico"
                         ).permitAll()
 

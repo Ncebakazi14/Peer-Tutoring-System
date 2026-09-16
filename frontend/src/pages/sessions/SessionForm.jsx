@@ -52,29 +52,29 @@ export default function SessionForm({ initialValues, submitLabel, serverError, o
   };
 
   return (
-    <form className="session-form" onSubmit={handleSubmit}>
+    <form className="app-form" onSubmit={handleSubmit}>
       {(clientError || serverError) && (
-        <div className="alert alert-error">{clientError || serverError}</div>
+        <div className="app-alert">{clientError || serverError}</div>
       )}
 
       <label>Topic</label>
-      <input name="topic" className="input" value={values.topic}
+      <input name="topic" className="app-input" value={values.topic}
         onChange={handleChange} placeholder="e.g. Linked Lists" required />
 
-      <div className="row">
+      <div className="app-row">
         <div>
           <label>Start time</label>
-          <input type="datetime-local" name="startTime" className="input"
+          <input type="datetime-local" name="startTime" className="app-input"
             value={values.startTime} onChange={handleChange} required />
         </div>
         <div>
           <label>End time</label>
-          <input type="datetime-local" name="endTime" className="input"
+          <input type="datetime-local" name="endTime" className="app-input"
             value={values.endTime} onChange={handleChange} required />
         </div>
       </div>
 
-      <label className="checkbox">
+      <label className="app-checkbox">
         <input type="checkbox" name="isOnline" checked={values.isOnline} onChange={handleChange} />
         This is an online session
       </label>
@@ -82,7 +82,7 @@ export default function SessionForm({ initialValues, submitLabel, serverError, o
       {!values.isOnline && (
         <>
           <label>Location</label>
-          <input name="location" className="input" value={values.location}
+          <input name="location" className="app-input" value={values.location}
             onChange={handleChange} placeholder="e.g. Library Room 4" required />
         </>
       )}
@@ -90,16 +90,16 @@ export default function SessionForm({ initialValues, submitLabel, serverError, o
       {values.isOnline && (
         <>
           <label>Meeting link</label>
-          <input name="meetingLink" className="input" value={values.meetingLink}
+          <input name="meetingLink" className="app-input" value={values.meetingLink}
             onChange={handleChange} placeholder="e.g. https://meet.google.com/..." required />
         </>
       )}
 
       <label>Maximum students</label>
-      <input type="number" name="maxStudents" className="input" min="1"
+      <input type="number" name="maxStudents" className="app-input" min="1"
         value={values.maxStudents} onChange={handleChange} required />
 
-      <button type="submit" className="btn btn-primary" disabled={submitting}>
+      <button type="submit" className="app-btn-dark" disabled={submitting}>
         {submitting ? 'Saving...' : submitLabel}
       </button>
     </form>

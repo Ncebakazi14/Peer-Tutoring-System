@@ -1,9 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import SessionsPage from './pages/sessions/SessionsPage';
 import MySessionsPage from './pages/sessions/MySessionsPage';
 import CreateSessionPage from './pages/sessions/CreateSessionPage';
 import EditSessionPage from './pages/sessions/EditSessionPage';
 import SessionDetailPage from './pages/sessions/SessionDetailPage';
+import BookingPage from './pages/bookings/BookingPage';
+import CreateBookingPage from './pages/bookings/CreateBookingPage';
 import './index.css';
 
 export default function App() {
@@ -13,7 +15,10 @@ export default function App() {
         <Route path="/" element={<Navigate to="/sessions" replace />} />
         <Route path="/sessions" element={<SessionsPage />} />
         <Route path="/my-sessions" element={<MySessionsPage />} />
+        <Route path="/my-bookings" element={<BookingPage />} />
+        <Route path="/bookings" element={<BookingPage />} />
         <Route path="/sessions/new" element={<CreateSessionPage />} />
+        <Route path="/bookings/new" element={<CreateBookingPage />} />
         <Route path="/sessions/:id" element={<SessionDetailPage />} />
         <Route path="/sessions/:id/edit" element={<EditSessionPage />} />
         <Route path="*" element={<div>Not found</div>} />

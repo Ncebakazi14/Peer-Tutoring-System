@@ -1,0 +1,263 @@
+﻿* { box-sizing: border-box; }
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f6f8;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #2b2f36;
+}
+
+.app-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eceef1;
+  padding: 18px 12px;
+  flex-shrink: 0;
+}
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  color: #1f2430;
+  padding: 6px 10px 18px;
+}
+.app-nav { display: flex; flex-direction: column; gap: 2px; }
+.app-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: #7a8191;
+  text-decoration: none;
+  font-size: 13.5px;
+}
+.app-nav-item:hover { background: #f4f5f8; color: #3a3f4a; }
+.app-nav-item.active { background: #eceef2; color: #1f2430; font-weight: 600; }
+
+.app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.app-topbar {
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #eceef1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 0 24px;
+}
+.app-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eceef2;
+  color: #3a3f4a;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-content { padding: 24px; max-width: 1060px; width: 100%; margin: 0 auto; }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+.app-header h1 { margin: 0 0 4px; font-size: 20px; color: #1f2430; }
+.app-header p { margin: 0; font-size: 13px; color: #8a90a0; }
+
+.app-btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #23283b;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.app-btn-dark:hover { background: #2f354d; }
+.app-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #d64545;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.app-btn-danger:hover { background: #b93a3a; }
+
+.app-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #7a8191;
+  cursor: pointer;
+  text-decoration: none;
+}
+.app-icon-btn:hover { background: #f0f1f4; color: #3a3f4a; }
+.app-icon-btn.danger:hover { background: #fdecec; color: #d64545; }
+
+.app-tabs { display: flex; gap: 22px; border-bottom: 1px solid #e8eaef; }
+.app-tab {
+  background: none;
+  border: none;
+  padding: 10px 2px;
+  font-size: 13.5px;
+  color: #8a90a0;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.app-tab.active { color: #1f2430; font-weight: 600; border-bottom-color: #23283b; }
+
+.app-card {
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+.app-table { width: 100%; border-collapse: collapse; }
+.app-table th {
+  text-align: left;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #9aa0af;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f1f4;
+}
+.app-table td {
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: #3a3f4a;
+  border-bottom: 1px solid #f4f5f8;
+}
+.app-table tbody tr:last-child td { border-bottom: none; }
+
+.app-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.app-status.pending, .app-status.available-status { background: #fff3cd; color: #8a6d00; }
+.app-status.confirmed, .app-status.scheduled, .app-status.booked { background: #dbe7ff; color: #2b4acb; }
+.app-status.completed { background: #d6f5dd; color: #1e7a37; }
+.app-status.cancelled { background: #f8d7da; color: #a02222; }
+.app-status.in_progress { background: #fff3cd; color: #8a6d00; }
+
+.app-form {
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 560px;
+}
+.app-form label { display: block; margin: 12px 0 4px; font-size: 13px; font-weight: 600; color: #1f2430; }
+.app-form .app-input {
+  padding: 10px;
+  border: 1px solid #d3d7e0;
+  border-radius: 7px;
+  font-size: 13.5px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  color: #2b2f36;
+}
+.app-form .app-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.app-form .app-checkbox { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.app-form .app-btn-dark { margin-top: 18px; }
+
+.app-filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.app-filters .app-input {
+  padding: 10px;
+  border: 1px solid #d3d7e0;
+  border-radius: 7px;
+  font-size: 13.5px;
+  background: #fff;
+}
+.app-filters form { display: flex; gap: 8px; flex: 1; }
+
+.app-detail {
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 560px;
+  margin-top: 16px;
+}
+.app-detail dl { display: grid; grid-template-columns: 130px 1fr; row-gap: 10px; margin: 0; }
+.app-detail dt { font-weight: 600; color: #1f2430; font-size: 13.5px; }
+.app-detail dd { margin: 0; color: #3a3f4a; font-size: 13.5px; }
+.app-detail .app-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+.app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+.app-session-card {
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  padding: 16px;
+}
+.app-session-card .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.app-session-card h3 { margin: 0; font-size: 15px; color: #1f2430; }
+.app-session-card .meta { margin: 4px 0; color: #8a90a0; font-size: 13px; }
+.app-session-card .app-btn-dark { margin-top: 10px; padding: 8px 14px; font-size: 12.5px; }
+
+.app-alert {
+  background: #fdecec;
+  color: #b33;
+  border: 1px solid #f6c9c9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-top: 14px;
+}
+.app-empty { padding: 22px 16px; color: #9aa0af; font-size: 13.5px; margin: 0; }
+.app-link { color: #3a66c9; text-decoration: none; }
+
+.app-add-slot {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1.5px dashed #d3d7e0;
+  border-radius: 10px;
+  color: #7a8191;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.app-add-slot:hover { border-color: #23283b; color: #3a3f4a; }
+
+@media (max-width: 720px) {
+  .app-shell { flex-direction: column; }
+  .app-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #eceef1; }
+  .app-form .app-row { grid-template-columns: 1fr; }
+}
