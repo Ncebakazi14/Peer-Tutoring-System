@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import sessionApi from '../../services/sessionApi';
 import { useAuth } from '../../context/AuthContext';
-import './sessions.css';
+import '../../styles/app.css';
+import Layout from '../../components/Layout';
+import { I, icons } from '../../components/icons';
 
 const formatDateTime = (iso) =>
   iso
@@ -46,22 +48,48 @@ export default function SessionDetailPage() {
     }
   };
 
-  if (error) return <div className="sessions-page"><div className="alert alert-error">{error}</div></div>;
-  if (!session) return <div className="sessions-page"><p>Loading...</p></div>;
+  if (error) return (
+    <Layout
+      role={user?.role === 'STUDENT' ? 'student' : 'tutor'}
+      active={user?.role === 'STUDENT' ? 'Browse Tutors' : 'My Sessions'}
+      title="Session"
+    >
+      <div className="app-alert">{error}</div>
+    </Layout>
+  );
+  if (!session) return (
+    <Layout
+      role={user?.role === 'STUDENT' ? 'student' : 'tutor'}
+      active={user?.role === 'STUDENT' ? 'Browse Tutors' : 'My Sessions'}
+      title="Session"
+    >
+      <p className="app-empty">Loading...</p>
+    </Layout>
+  );
 
   return (
-    <div className="sessions-page">
-      <div className="page-header">
+      <Layout
+        role={user?.role === 'STUDENT' ? 'student' : 'tutor'}
+        active={user?.role === 'STUDENT' ? 'Browse Tutors' : 'My Sessions'}
+        title={session.topic || 'Tutoring session'}
+        subtitle="Session overview"
+        action={
+          <button className="app-btn-dark" onClick={() => navigate('/sessions')}>
+            <I size={14}>{icons.browse}</I> Browse sessions
+          </button>
+        }
+      >
+      <div className="app-header">
         <div>
           <h1>{session.topic || 'Tutoring session'}</h1>
-          <span className={`badge badge-${session.status.toLowerCase()}`}>{session.status}</span>
+          <span className={`app-status ${session.status.toLowerCase()}`}>{session.status.replace('_',' ')}</span>
         </div>
-        <Link to="/sessions" className="btn btn-outline">← Back to sessions</Link>
+        <Link to="/sessions" className="app-link">← Back to sessions</Link>
       </div>
 
-      {actionMsg && <div className="alert alert-error">{actionMsg}</div>}
+      {actionMsg && <div className="app-alert">{actionMsg}</div>}
 
-      <div className="detail-card">
+      <div className="app-detail">
         <dl>
           <dt>Starts</dt><dd>{formatDateTime(session.startTime)}</dd>
           <dt>Ends</dt><dd>{formatDateTime(session.endTime)}</dd>
@@ -73,16 +101,16 @@ export default function SessionDetailPage() {
         </dl>
 
         {user?.role === 'TUTOR' && (
-          <div className="actions">
-            <button className="btn btn-primary" onClick={() => navigate(`/sessions/${id}/edit`)}>
+          <div className="app-actions">
+            <button className="app-btn-dark" onClick={() => navigate(`/sessions/${id}/edit`)}>
               Edit
             </button>
-            <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+            <button className="app-btn-danger" onClick={handleDelete} disabled={deleting}>
               {deleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 }
