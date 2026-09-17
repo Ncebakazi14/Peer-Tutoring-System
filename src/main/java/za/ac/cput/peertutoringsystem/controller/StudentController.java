@@ -1,32 +1,63 @@
 package za.ac.cput.peertutoringsystem.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.peertutoringsystem.domain.Student;
-import za.ac.cput.peertutoringsystem.service.StudentService;
+import za.ac.cput.peertutoringsystem.dto.StudentResponseDTO;
+import za.ac.cput.peertutoringsystem.dto.StudentUpdateDTO;
+import za.ac.cput.peertutoringsystem.mapper.StudentMapper;
+import za.ac.cput.peertutoringsystem.service.IStudentService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/api/students")
 public class StudentController {
 
-    private final StudentService service = StudentService.getService();
+    private final IStudentService studentService;
 
-    @PostMapping("/create")
-    public Student create(@RequestBody Student student) {
-        return service.create(student);
+    public StudentController(IStudentService studentService) {
+        this.studentService = studentService;
     }
 
-    @GetMapping("/read/{studentId}")
-    public Student read(@PathVariable String studentId) {
-        return service.read(studentId);
+    @GetMapping
+    public ResponseEntity<List<StudentResponseDTO>> findAll() {
+
+        List<StudentResponseDTO> students = studentService.findAll()
+                .stream()
+                .map(StudentMapper::toResponseDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(students);
     }
 
-    @PutMapping("/update")
-    public Student update(@RequestBody Student student) {
-        return service.update(student);
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentResponseDTO> findById(@PathVariable Long id) {
+
+        return studentService.findById(id)
+                .map(StudentMapper::toResponseDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{studentId}")
-    public boolean delete(@PathVariable String studentId) {
-        return service.delete(studentId);
+    @PutMapping("/{id}")
+    public ResponseEntity<StudentResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody StudentUpdateDTO studentUpdateDTO) {
+
+        Student updatedStudent = studentService.update(id, studentUpdateDTO);
+
+        return ResponseEntity.ok(
+                StudentMapper.toResponseDTO(updatedStudent)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
+
+        studentService.softDelete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
