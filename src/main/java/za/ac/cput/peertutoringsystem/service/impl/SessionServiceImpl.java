@@ -1,8 +1,9 @@
-
 package za.ac.cput.peertutoringsystem.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import za.ac.cput.peertutoringsystem.domain.PricingType;
 import za.ac.cput.peertutoringsystem.domain.Session;
 import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
@@ -12,9 +13,11 @@ import za.ac.cput.peertutoringsystem.exception.InvalidSessionTimeException;
 import za.ac.cput.peertutoringsystem.exception.ResourceNotFoundException;
 import za.ac.cput.peertutoringsystem.exception.SessionHasBookingsException;
 import za.ac.cput.peertutoringsystem.mapper.SessionMapper;
+import za.ac.cput.peertutoringsystem.repository.BookingRepository;
 import za.ac.cput.peertutoringsystem.repository.SessionRepository;
 import za.ac.cput.peertutoringsystem.service.SessionService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,15 +25,22 @@ import java.util.Locale;
 @Transactional
 public class SessionServiceImpl implements SessionService {
 
-    private final SessionRepository sessionRepository;
+    private static final String CONFIRMED = "Confirmed";
 
-    public SessionServiceImpl(SessionRepository sessionRepository) {
+    private final SessionRepository sessionRepository;
+    private final BookingRepository bookingRepository;
+
+    public SessionServiceImpl(
+            SessionRepository sessionRepository,
+            BookingRepository bookingRepository) {
         this.sessionRepository = sessionRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SessionResponseDTO> findAll(SessionStatus status, String topic) {
+    public List<SessionResponseDTO> findAll(
+            SessionStatus status, String topic) {
         return sessionRepository.findAll().stream()
                 .filter(session ->
                         status == null || session.getStatus() == status)
@@ -38,14 +48,16 @@ public class SessionServiceImpl implements SessionService {
                         topic == null
                                 || topic.isBlank()
                                 || (session.getTopic() != null
-                                && session.getTopic().toLowerCase(Locale.ROOT)
+                                && session.getTopic()
+                                .toLowerCase(Locale.ROOT)
                                 .contains(topic.trim().toLowerCase(Locale.ROOT))))
                 .map(SessionMapper::toResponseDTO)
                 .toList();
     }
 
     @Override
-    public SessionResponseDTO create(SessionRequestDTO dto, Long callerUserId) {
+    public SessionResponseDTO create(
+            SessionRequestDTO dto, Long callerUserId) {
         validateCaller(callerUserId);
         validateSessionInput(dto);
 
@@ -62,13 +74,17 @@ public class SessionServiceImpl implements SessionService {
         session.setStatus(SessionStatus.SCHEDULED);
         session.setTopic(dto.getTopic().trim());
 
-        return SessionMapper.toResponseDTO(sessionRepository.save(session));
+        // Save pricing details
+        session.setPricingType(dto.getPricingType());
+        session.setPrice(dto.getPrice());
+
+        return SessionMapper.toResponseDTO(
+                sessionRepository.save(session));
     }
 
     @Override
     public SessionResponseDTO update(
             Long id, SessionRequestDTO dto, Long callerUserId) {
-
         validateCaller(callerUserId);
         validateSessionInput(dto);
 
@@ -89,7 +105,12 @@ public class SessionServiceImpl implements SessionService {
         session.setMaxStudents(dto.getMaxStudents());
         session.setTopic(dto.getTopic().trim());
 
-        return SessionMapper.toResponseDTO(sessionRepository.save(session));
+        // Update pricing details
+        session.setPricingType(dto.getPricingType());
+        session.setPrice(dto.getPrice());
+
+        return SessionMapper.toResponseDTO(
+                sessionRepository.save(session));
     }
 
     @Override
@@ -132,12 +153,14 @@ public class SessionServiceImpl implements SessionService {
 
     private Session getSessionById(Long id) {
         if (id == null) {
-            throw new ResourceNotFoundException("Session ID cannot be null.");
+            throw new ResourceNotFoundException(
+                    "Session ID cannot be null.");
         }
 
         return sessionRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Session not found: " + id));
+                        new ResourceNotFoundException(
+                                "Session not found: " + id));
     }
 
     private void validateCaller(Long callerUserId) {
@@ -166,13 +189,31 @@ public class SessionServiceImpl implements SessionService {
         }
 
         if (dto.getMaxStudents() <= 0) {
-            throw new InvalidSessionTimeException(
+            throw new IllegalArgumentException(
                     "maxStudents must be greater than zero.");
         }
 
         if (dto.getTopic() == null || dto.getTopic().isBlank()) {
             throw new IllegalArgumentException(
                     "Session topic is required.");
+        }
+
+        // Validate pricing type
+        if (dto.getPricingType() == null) {
+            throw new IllegalArgumentException(
+                    "Pricing type is required.");
+        }
+
+        // Validate price in ZAR
+        BigDecimal price = dto.getPrice();
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(
+                    "Price must be greater than zero.");
+        }
+
+        if (price.scale() > 2) {
+            throw new IllegalArgumentException(
+                    "Price cannot have more than two decimal places.");
         }
 
         if (dto.isOnline()) {
@@ -182,7 +223,8 @@ public class SessionServiceImpl implements SessionService {
                         "An online session requires a meeting link.");
             }
         } else {
-            if (dto.getLocation() == null || dto.getLocation().isBlank()) {
+            if (dto.getLocation() == null
+                    || dto.getLocation().isBlank()) {
                 throw new IllegalArgumentException(
                         "An in-person session requires a location.");
             }
@@ -199,7 +241,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     private boolean hasActiveBookings(Long sessionId) {
-        // TODO: Connect to the booking repository when available.
-        return false;
+        return bookingRepository.existsBySessionIdAndStatusIgnoreCase(
+                sessionId, CONFIRMED);
     }
 }

@@ -1,4 +1,3 @@
-
 package za.ac.cput.peertutoringsystem.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,12 +12,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import za.ac.cput.peertutoringsystem.domain.PricingType;
 import za.ac.cput.peertutoringsystem.domain.User;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
 import za.ac.cput.peertutoringsystem.repository.UserRepository;
 import za.ac.cput.peertutoringsystem.service.SessionService;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -90,8 +92,12 @@ class SessionControllerTest {
         req.setTutorProfileId(2L);
         req.setStartTime(LocalDateTime.now().plusDays(1));
         req.setEndTime(LocalDateTime.now().plusDays(1).plusHours(1));
+        req.setLocation("Library Room 4");
+        req.setOnline(false);
         req.setMaxStudents(3);
         req.setTopic("Topic");
+        req.setPricingType(PricingType.HOURLY);
+        req.setPrice(new BigDecimal("150.00"));
 
         SessionResponseDTO resp = new SessionResponseDTO();
         resp.setSessionId(10L);

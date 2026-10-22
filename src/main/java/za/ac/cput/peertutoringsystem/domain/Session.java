@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.Column;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -52,6 +54,14 @@ public class Session {
 
     @Column(nullable = false)
     private String topic;
+
+    // Pricing information
+    @Enumerated(EnumType.STRING)
+    @Column
+    private PricingType pricingType;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal price;
 
     public Long getSessionId() {
         return sessionId;
@@ -147,5 +157,21 @@ public class Session {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public PricingType getPricingType() {
+        return pricingType;
+    }
+
+    public void setPricingType(PricingType pricingType) {
+        this.pricingType = pricingType;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }
