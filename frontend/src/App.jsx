@@ -5,7 +5,6 @@ import {
     Route,
     Navigate,
     useNavigate,
-    Link,
 } from 'react-router-dom';
 
 import Login from './pages/Login';
@@ -23,6 +22,9 @@ import TutorMySessions from './pages/tutor/MySessions';
 
 import Subjects from './pages/subjects/Subjects';
 import Bookings from './pages/Bookings';
+import Reviews from './pages/Reviews';
+import Messages from './pages/Messages';
+import Settings from './pages/Settings';
 
 import './App.css';
 
@@ -39,38 +41,6 @@ function RegisterPage() {
 
     return (
         <Register onLogin={() => navigate('/login')} />
-    );
-}
-
-function FeaturePage({ title, description }) {
-    return (
-        <div className="dashboard-page">
-            <div className="dashboard-header">
-                <div>
-                    <span className="dashboard-label">
-                        STUDENT PORTAL
-                    </span>
-
-                    <h1>{title}</h1>
-                    <p>{description}</p>
-                </div>
-            </div>
-
-            <section className="dashboard-section">
-                <h2>{title}</h2>
-
-                <p>
-                    This section is ready for its functionality to be
-                    connected.
-                </p>
-
-                <p>
-                    <Link to="/student/dashboard">
-                        Back to Dashboard
-                    </Link>
-                </p>
-            </section>
-        </div>
     );
 }
 
@@ -173,52 +143,30 @@ function App() {
                         element={<SessionsRoute />}
                     />
 
-                    {/* Bookings - unchanged */}
+                    {/* Bookings */}
                     <Route
                         path="/bookings"
                         element={<Bookings />}
                     />
 
-                    {/* Other application sections */}
+                    {/* Reviews */}
                     <Route
                         path="/reviews"
-                        element={
-                            <FeaturePage
-                                title="My Reviews"
-                                description="View your tutoring reviews."
-                            />
-                        }
+                        element={<Reviews />}
                     />
 
+                    {/* Actual Messages page */}
                     <Route
                         path="/messages"
-                        element={
-                            <FeaturePage
-                                title="Messages"
-                                description="Your tutoring conversations."
-                            />
-                        }
+                        element={<Messages />}
                     />
 
-                    <Route
-                        path="/notifications"
-                        element={
-                            <FeaturePage
-                                title="Notifications"
-                                description="View your latest notifications."
-                            />
-                        }
-                    />
-
+                    {/* Actual Settings page */}
                     <Route
                         path="/settings"
-                        element={
-                            <FeaturePage
-                                title="Settings"
-                                description="Manage your account preferences."
-                            />
-                        }
+                        element={<Settings />}
                     />
+
                 </Route>
 
                 {/* Handle unknown routes */}

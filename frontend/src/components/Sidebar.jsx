@@ -1,23 +1,19 @@
-﻿import { NavLink, useNavigate } from "react-router-dom";
+﻿
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 function Sidebar() {
     const navigate = useNavigate();
 
-    // Read the logged-in user's role from the JWT token.
     const getUserRole = () => {
         const token = localStorage.getItem("token");
 
-        if (!token) {
-            return "STUDENT";
-        }
+        if (!token) return "STUDENT";
 
         try {
             const payloadPart = token.split(".")[1];
 
-            if (!payloadPart) {
-                return "STUDENT";
-            }
+            if (!payloadPart) return "STUDENT";
 
             const base64 = payloadPart
                 .replace(/-/g, "+")
@@ -30,14 +26,17 @@ function Sidebar() {
 
             const payload = JSON.parse(atob(paddedBase64));
             const rawRole =
-                payload.role ?? payload.roles ?? payload.authority;
+                payload.role ??
+                payload.roles ??
+                payload.authorities ??
+                payload.authority;
 
             const roleValue = Array.isArray(rawRole)
-                ? rawRole[0]
+                ? rawRole.join(" ")
                 : rawRole;
 
             return String(roleValue ?? "STUDENT")
-                .replace(/^ROLE_/i, "")
+                .replace(/ROLE_/gi, "")
                 .toUpperCase();
         } catch (error) {
             console.error("Could not read user role:", error);
@@ -46,7 +45,7 @@ function Sidebar() {
     };
 
     const role = getUserRole();
-    const isTutor = role === "TUTOR";
+    const isTutor = role.includes("TUTOR");
 
     const studentNavItems = [
         {
@@ -83,11 +82,6 @@ function Sidebar() {
             to: "/messages",
             icon: "💬",
             label: "Messages",
-        },
-        {
-            to: "/notifications",
-            icon: "🔔",
-            label: "Notifications",
         },
         {
             to: "/settings",
@@ -128,11 +122,6 @@ function Sidebar() {
             label: "Messages",
         },
         {
-            to: "/notifications",
-            icon: "🔔",
-            label: "Notifications",
-        },
-        {
             to: "/settings",
             icon: "⚙️",
             label: "Settings",
@@ -151,7 +140,9 @@ function Sidebar() {
             <div className="logo">
                 <h2>Peer Tutoring</h2>
                 <p>Learn. Share. Succeed.</p>
-                <span>{isTutor ? "TUTOR PORTAL" : "STUDENT PORTAL"}</span>
+                <span>
+                    {isTutor ? "TUTOR PORTAL" : "STUDENT PORTAL"}
+                </span>
             </div>
 
             <nav className="nav-links">
@@ -166,7 +157,6 @@ function Sidebar() {
                         <span className="nav-icon" aria-hidden="true">
                             {item.icon}
                         </span>
-
                         <span>{item.label}</span>
                     </NavLink>
                 ))}
@@ -181,7 +171,6 @@ function Sidebar() {
                     <span className="nav-icon" aria-hidden="true">
                         🚪
                     </span>
-
                     <span>Logout</span>
                 </button>
             </div>
