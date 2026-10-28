@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.controller;
 
 import jakarta.validation.Valid;
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import za.ac.cput.peertutoringsystem.domain.SessionStatus;
+import za.ac.cput.peertutoringsystem.domain.User;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
-import za.ac.cput.peertutoringsystem.domain.User;
 import za.ac.cput.peertutoringsystem.repository.UserRepository;
 import za.ac.cput.peertutoringsystem.service.SessionService;
 
@@ -42,7 +44,16 @@ public class SessionController {
             @RequestParam(required = false) SessionStatus status,
             @RequestParam(required = false) String topic) {
 
-        return ResponseEntity.ok(sessionService.findAll(status, topic));
+        return ResponseEntity.ok(
+                sessionService.findAll(status, topic));
+    }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<SessionResponseDTO>> getMySessions() {
+        Long callerUserId = getAuthenticatedUserId();
+
+        return ResponseEntity.ok(
+                sessionService.findMySessions(callerUserId));
     }
 
     @PostMapping
@@ -68,7 +79,6 @@ public class SessionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-
         Long callerUserId = getAuthenticatedUserId();
 
         sessionService.delete(id, callerUserId);

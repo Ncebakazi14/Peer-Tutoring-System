@@ -1,8 +1,9 @@
+
 package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tutor_profiles")
@@ -11,6 +12,12 @@ public class TutorProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Link this tutor profile to its registered user.
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
     @NotBlank(message = "Bio is required")
     @Column(nullable = false)
@@ -35,6 +42,14 @@ public class TutorProfile {
 
     public Long getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getBio() {

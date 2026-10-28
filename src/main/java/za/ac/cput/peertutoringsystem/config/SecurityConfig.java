@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,11 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth",
+                                "/api/auth/**",
+                                "/error"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
 

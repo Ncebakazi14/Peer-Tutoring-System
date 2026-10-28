@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.service;
 
 import za.ac.cput.peertutoringsystem.domain.SessionStatus;
@@ -7,7 +8,10 @@ import za.ac.cput.peertutoringsystem.dto.SessionResponseDTO;
 import java.util.List;
 
 public interface SessionService {
+
     List<SessionResponseDTO> findAll(SessionStatus status, String topic);
+
+    List<SessionResponseDTO> findMySessions(Long callerUserId);
 
     SessionResponseDTO create(SessionRequestDTO dto, Long callerUserId);
 
@@ -19,4 +23,3 @@ public interface SessionService {
 
     void decrementCurrentStudents(Long sessionId);
 }
-

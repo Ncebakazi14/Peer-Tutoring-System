@@ -1,12 +1,14 @@
+
 package za.ac.cput.peertutoringsystem.controller;
+
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import za.ac.cput.peertutoringsystem.dto.SubjectRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SubjectResponseDTO;
 import za.ac.cput.peertutoringsystem.service.SubjectService;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,45 +22,45 @@ public class SubjectController {
         this.subjectService = subjectService;
     }
 
+    // Create a subject.
     @PostMapping
     public ResponseEntity<SubjectResponseDTO> create(
-            @RequestBody SubjectRequestDTO dto) {
+            @Valid @RequestBody SubjectRequestDTO dto) {
 
         SubjectResponseDTO createdSubject = subjectService.create(dto);
 
-        return new ResponseEntity<>(
-                createdSubject,
-                HttpStatus.CREATED
-        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdSubject);
     }
 
+    // Retrieve all subjects.
     @GetMapping
     public ResponseEntity<List<SubjectResponseDTO>> findAll() {
 
-        return ResponseEntity.ok(
-                subjectService.findAll()
-        );
+        List<SubjectResponseDTO> subjects = subjectService.findAll();
+
+        return ResponseEntity.ok(subjects);
     }
 
+    // Retrieve one subject by ID.
     @GetMapping("/{id}")
     public ResponseEntity<SubjectResponseDTO> findById(
             @PathVariable Long id) {
 
-        return ResponseEntity.ok(
-                subjectService.findById(id)
-        );
+        return ResponseEntity.ok(subjectService.findById(id));
     }
 
+    // Update a subject.
     @PutMapping("/{id}")
     public ResponseEntity<SubjectResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody SubjectRequestDTO dto) {
+            @Valid @RequestBody SubjectRequestDTO dto) {
 
-        return ResponseEntity.ok(
-                subjectService.update(id, dto)
-        );
+        return ResponseEntity.ok(subjectService.update(id, dto));
     }
 
+    // Delete a subject.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id) {

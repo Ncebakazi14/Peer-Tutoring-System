@@ -1,9 +1,9 @@
+
 package za.ac.cput.peertutoringsystem.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import za.ac.cput.peertutoringsystem.domain.PricingType;
 import za.ac.cput.peertutoringsystem.domain.Session;
 import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 import za.ac.cput.peertutoringsystem.dto.SessionRequestDTO;
@@ -41,6 +41,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public List<SessionResponseDTO> findAll(
             SessionStatus status, String topic) {
+
         return sessionRepository.findAll().stream()
                 .filter(session ->
                         status == null || session.getStatus() == status)
@@ -55,9 +56,21 @@ public class SessionServiceImpl implements SessionService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<SessionResponseDTO> findMySessions(Long callerUserId) {
+        validateCaller(callerUserId);
+
+        return sessionRepository.findByOwnerUserId(callerUserId)
+                .stream()
+                .map(SessionMapper::toResponseDTO)
+                .toList();
+    }
+
     @Override
     public SessionResponseDTO create(
             SessionRequestDTO dto, Long callerUserId) {
+
         validateCaller(callerUserId);
         validateSessionInput(dto);
 
@@ -73,8 +86,6 @@ public class SessionServiceImpl implements SessionService {
         session.setCurrentStudents(0);
         session.setStatus(SessionStatus.SCHEDULED);
         session.setTopic(dto.getTopic().trim());
-
-        // Save pricing details
         session.setPricingType(dto.getPricingType());
         session.setPrice(dto.getPrice());
 
@@ -85,6 +96,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public SessionResponseDTO update(
             Long id, SessionRequestDTO dto, Long callerUserId) {
+
         validateCaller(callerUserId);
         validateSessionInput(dto);
 
@@ -104,8 +116,6 @@ public class SessionServiceImpl implements SessionService {
         session.setMeetingLink(dto.getMeetingLink());
         session.setMaxStudents(dto.getMaxStudents());
         session.setTopic(dto.getTopic().trim());
-
-        // Update pricing details
         session.setPricingType(dto.getPricingType());
         session.setPrice(dto.getPrice());
 
@@ -198,14 +208,13 @@ public class SessionServiceImpl implements SessionService {
                     "Session topic is required.");
         }
 
-        // Validate pricing type
         if (dto.getPricingType() == null) {
             throw new IllegalArgumentException(
                     "Pricing type is required.");
         }
 
-        // Validate price in ZAR
         BigDecimal price = dto.getPrice();
+
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(
                     "Price must be greater than zero.");

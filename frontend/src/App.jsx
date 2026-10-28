@@ -1,3 +1,4 @@
+
 import {
     BrowserRouter,
     Routes,
@@ -17,6 +18,8 @@ import BrowseTutors from './pages/student/BrowseTutors';
 
 import TutorProfile from './pages/tutor/TutorProfile';
 import TutorDashboard from './pages/tutor/TutorDashboard';
+import Subjects from './pages/subjects/Subjects';
+import Bookings from './pages/Bookings';
 
 import './App.css';
 
@@ -118,6 +121,12 @@ function App() {
                         element={<BrowseTutors />}
                     />
 
+                    {/* Subjects */}
+                    <Route
+                        path="/subjects"
+                        element={<Subjects />}
+                    />
+
                     {/* Other application sections */}
                     <Route
                         path="/sessions"
@@ -129,14 +138,10 @@ function App() {
                         }
                     />
 
+                    {/* Bookings */}
                     <Route
                         path="/bookings"
-                        element={
-                            <FeaturePage
-                                title="My Bookings"
-                                description="View and manage your bookings."
-                            />
-                        }
+                        element={<Bookings />}
                     />
 
                     <Route

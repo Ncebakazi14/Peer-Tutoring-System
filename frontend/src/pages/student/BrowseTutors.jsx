@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TutorApi from '../../api/TutorApi';
@@ -38,10 +39,7 @@ function BrowseTutors() {
                         );
                     }
 
-                    console.error(
-                        'Failed to load tutor profiles:',
-                        err
-                    );
+                    console.error('Failed to load tutor profiles:', err);
                 }
             } finally {
                 if (isMounted) {
@@ -95,9 +93,7 @@ function BrowseTutors() {
                     {!loading && !error && (
                         <span className="tutor-count">
                             {tutors.length}{' '}
-                            {tutors.length === 1
-                                ? 'profile'
-                                : 'profiles'}
+                            {tutors.length === 1 ? 'profile' : 'profiles'}
                         </span>
                     )}
                 </div>
@@ -135,42 +131,63 @@ function BrowseTutors() {
 
                 {!loading && !error && tutors.length > 0 && (
                     <div className="tutor-grid">
-                        {tutors.map((tutor) => (
-                            <article
-                                className="tutor-card"
-                                key={tutor.id}
-                            >
-                                <div className="tutor-card-top">
-                                    <div className="tutor-avatar">
-                                        {String(tutor.id ?? 'T')}
-                                    </div>
+                        {tutors.map((tutor) => {
+                            const firstName = tutor.firstName?.trim() || '';
+                            const lastName = tutor.lastName?.trim() || '';
+                            const fullName =
+                                `${firstName} ${lastName}`.trim() || 'Tutor';
 
-                                    <span className="tutor-id">
-                                        Tutor profile #{tutor.id}
-                                    </span>
-                                </div>
+                            const initials =
+                                `${firstName.charAt(0)}${lastName.charAt(0)}`
+                                    .trim()
+                                    .toUpperCase() || 'T';
 
-                                <div className="tutor-card-content">
-                                    <h3>{tutor.qualification}</h3>
+                            return (
+                                <article
+                                    className="tutor-card"
+                                    key={tutor.id}
+                                >
+                                    <div className="tutor-card-top">
+                                        <div className="tutor-avatar">
+                                            {initials}
+                                        </div>
 
-                                    <div className="tutor-detail">
-                                        <span className="tutor-detail-label">
-                                            About
+                                        <span className="tutor-id">
+                                            {fullName}
                                         </span>
-
-                                        <p>{tutor.bio}</p>
                                     </div>
 
-                                    <div className="tutor-detail">
-                                        <span className="tutor-detail-label">
-                                            Availability
-                                        </span>
+                                    <div className="tutor-card-content">
+                                        <h3>
+                                            {tutor.qualification ||
+                                                'Qualification not provided'}
+                                        </h3>
 
-                                        <p>{tutor.availability}</p>
+                                        <div className="tutor-detail">
+                                            <span className="tutor-detail-label">
+                                                About
+                                            </span>
+
+                                            <p>
+                                                {tutor.bio ||
+                                                    'No biography provided.'}
+                                            </p>
+                                        </div>
+
+                                        <div className="tutor-detail">
+                                            <span className="tutor-detail-label">
+                                                Availability
+                                            </span>
+
+                                            <p>
+                                                {tutor.availability ||
+                                                    'Availability not provided.'}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
-                        ))}
+                                </article>
+                            );
+                        })}
                     </div>
                 )}
             </section>
