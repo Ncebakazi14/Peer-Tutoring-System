@@ -1,7 +1,23 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../../App.css';
+
+const api = axios.create({
+    baseURL: '/api',
+});
+
+// Attach the logged-in user's JWT token to requests.
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
 
 function TutorProfile() {
     const [profile, setProfile] = useState({
@@ -16,22 +32,15 @@ function TutorProfile() {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
-    const api = axios.create({ baseURL: '/api' });
-
-    api.interceptors.request.use((config) => {
-        const token = localStorage.getItem('token');
-
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return config;
-    });
-
     useEffect(() => {
-        async function loadProfiles() {
+        let active = true;
+
+        async function loadMyProfile() {
             try {
                 const response = await api.get('/tutor-profiles/mine');
+
+                if (!active) return;
+
                 const existingProfile = response.data;
 
                 if (existingProfile && existingProfile.id != null) {
@@ -43,15 +52,23 @@ function TutorProfile() {
                     });
                 }
             } catch (err) {
+                if (!active) return;
+
                 setError(
-                    'Could not load tutor profiles. Please check that the backend is running and try again.'
+                    'Could not load your tutor profile. Please check that the backend is running and try again.'
                 );
             } finally {
-                setLoading(false);
+                if (active) {
+                    setLoading(false);
+                }
             }
         }
 
-        loadProfiles();
+        loadMyProfile();
+
+        return () => {
+            active = false;
+        };
     }, []);
 
     function handleChange(event) {
@@ -121,7 +138,11 @@ function TutorProfile() {
             </div>
 
             <section className="dashboard-section">
-                <h2>{profileId !== null ? 'Update Your Profile' : 'Create Your Profile'}</h2>
+                <h2>
+                    {profileId !== null
+                        ? 'Update Your Profile'
+                        : 'Create Your Profile'}
+                </h2>
 
                 <p>
                     Complete all three fields so students can learn more about you.
@@ -189,7 +210,9 @@ function TutorProfile() {
                 </form>
 
                 <p className="profile-back-link">
-                    <Link to="/tutor/dashboard">← Back to Tutor Dashboard</Link>
+                    <Link to="/tutor/dashboard">
+                        ← Back to Tutor Dashboard
+                    </Link>
                 </p>
             </section>
         </div>

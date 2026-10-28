@@ -1,13 +1,10 @@
 package za.ac.cput.peertutoringsystem.service;
 
 import za.ac.cput.peertutoringsystem.domain.Subject;
-import za.ac.cput.peertutoringsystem.domain.User;
-import za.ac.cput.peertutoringsystem.domain.Role;
 import za.ac.cput.peertutoringsystem.dto.SubjectRequestDTO;
 import za.ac.cput.peertutoringsystem.dto.SubjectResponseDTO;
 import za.ac.cput.peertutoringsystem.mapper.SubjectMapper;
 import za.ac.cput.peertutoringsystem.repository.SubjectRepository;
-import za.ac.cput.peertutoringsystem.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -17,17 +14,13 @@ import java.util.List;
 public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
-    private final UserRepository userRepository;
 
-    public SubjectServiceImpl(
-            SubjectRepository subjectRepository,
-            UserRepository userRepository) {
+    public SubjectServiceImpl(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
-    public SubjectResponseDTO create(SubjectRequestDTO dto, String email) {
+    public SubjectResponseDTO create(SubjectRequestDTO dto) {
 
         if (subjectRepository.findByCode(dto.getCode()).isPresent()) {
             throw new IllegalArgumentException(
@@ -36,23 +29,10 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         Subject subject = SubjectMapper.toEntity(dto);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        if (user.getRole() != Role.TUTOR) {
-            throw new IllegalArgumentException("Only tutor accounts can manage subjects.");
-        }
-        subject.setUser(user);
 
         Subject savedSubject = subjectRepository.save(subject);
 
         return SubjectMapper.toResponseDTO(savedSubject);
-    }
-
-    @Override
-    public List<SubjectResponseDTO> findMine(String email) {
-        return subjectRepository.findByUserEmail(email).stream()
-                .map(SubjectMapper::toResponseDTO)
-                .toList();
     }
 
     @Override
@@ -78,7 +58,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectResponseDTO update(Long id, SubjectRequestDTO dto, String email) {
+    public SubjectResponseDTO update(Long id, SubjectRequestDTO dto) {
 
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() ->
@@ -86,9 +66,6 @@ public class SubjectServiceImpl implements SubjectService {
                                 "Subject with ID " + id + " not found."
                         )
                 );
-        if (subject.getUser() == null || !subject.getUser().getEmail().equals(email)) {
-            throw new IllegalArgumentException("You can only update your own subjects.");
-        }
 
         subjectRepository.findByCode(dto.getCode())
                 .ifPresent(existingSubject -> {
@@ -109,17 +86,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void delete(Long id, String email) {
+    public void delete(Long id) {
 
         if (!subjectRepository.existsById(id)) {
             throw new IllegalArgumentException(
                     "Subject with ID " + id + " not found."
             );
-        }
-
-        Subject subject = subjectRepository.findById(id).orElseThrow();
-        if (subject.getUser() == null || !subject.getUser().getEmail().equals(email)) {
-            throw new IllegalArgumentException("You can only delete your own subjects.");
         }
 
         subjectRepository.deleteById(id);

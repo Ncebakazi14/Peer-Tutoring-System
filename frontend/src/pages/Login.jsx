@@ -1,5 +1,56 @@
+
 import { useState } from 'react';
 import authService from '../services/authService';
+
+function getUserRole(token) {
+    try {
+        const tokenParts = token.split('.');
+
+        if (tokenParts.length !== 3) {
+            throw new Error('The server returned an invalid token.');
+        }
+
+        const base64Payload = tokenParts[1]
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
+
+        const paddedPayload = base64Payload.padEnd(
+            Math.ceil(base64Payload.length / 4) * 4,
+            '='
+        );
+
+        const payload = JSON.parse(
+            decodeURIComponent(
+                Array.from(atob(paddedPayload), (character) =>
+                    '%' + character.charCodeAt(0)
+                        .toString(16)
+                        .padStart(2, '0')
+                ).join('')
+            )
+        );
+
+        const rawRole =
+            payload.role ??
+            payload.roles ??
+            payload.authority ??
+            payload.authorities;
+
+        const roleValue = Array.isArray(rawRole)
+            ? rawRole[0]
+            : rawRole;
+
+        const roleName =
+            typeof roleValue === 'object' && roleValue !== null
+                ? roleValue.authority ?? roleValue.role ?? roleValue.name
+                : roleValue;
+
+        return String(roleName ?? '')
+            .replace(/^ROLE_/i, '')
+            .toUpperCase();
+    } catch {
+        throw new Error('Unable to identify your account role from the token.');
+    }
+}
 
 function Login({ onRegister }) {
     const [email, setEmail] = useState('');
@@ -21,64 +72,21 @@ function Login({ onRegister }) {
                 );
             }
 
-            localStorage.setItem('token', result.token);
+            const role = getUserRole(result.token);
 
-            // Read the role from the JWT payload.
-            const tokenParts = result.token.split('.');
-
-            if (tokenParts.length !== 3) {
-                throw new Error('The server returned an invalid token.');
+            if (!['TUTOR', 'STUDENT', 'ADMIN'].includes(role)) {
+                throw new Error(
+                    'Your account role could not be identified. Please contact support.'
+                );
             }
 
-            const base64Payload = tokenParts[1]
-                .replace(/-/g, '+')
-                .replace(/_/g, '/');
-
-            const paddedPayload = base64Payload.padEnd(
-                Math.ceil(base64Payload.length / 4) * 4,
-                '='
-            );
-
-            const payload = JSON.parse(
-                decodeURIComponent(
-                    Array.from(
-                        atob(paddedPayload),
-                        (character) =>
-                            '%' +
-                            character
-                                .charCodeAt(0)
-                                .toString(16)
-                                .padStart(2, '0')
-                    ).join('')
-                )
-            );
-
-            // Support common role claim names.
-            const rawRole =
-                payload.role ??
-                payload.roles ??
-                payload.authority;
-
-            const roleValue = Array.isArray(rawRole)
-                ? rawRole[0]
-                : rawRole;
-
-            const role = String(roleValue ?? '')
-                .replace(/^ROLE_/i, '')
-                .toUpperCase();
+            // Save the token only after validating the token and role.
+            localStorage.setItem('token', result.token);
 
             if (role === 'TUTOR') {
                 window.location.href = '/tutor/dashboard';
-            } else if (role === 'STUDENT') {
-                window.location.href = '/student/dashboard';
-            } else if (role === 'ADMIN') {
-                window.location.href = '/student/dashboard';
             } else {
-                localStorage.removeItem('token');
-                setError(
-                    'Your account role could not be identified. ' +
-                    'Please contact support.'
-                );
+                window.location.href = '/student/dashboard';
             }
         } catch (err) {
             if (err.response?.status === 401) {
@@ -156,10 +164,7 @@ function Login({ onRegister }) {
                     </div>
 
                     {error && (
-                        <p
-                            role="alert"
-                            style={{ color: '#c62828' }}
-                        >
+                        <p role="alert" style={{ color: '#c62828' }}>
                             {error}
                         </p>
                     )}

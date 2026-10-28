@@ -2,6 +2,7 @@ package za.ac.cput.peertutoringsystem.model;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "bookings")
@@ -12,6 +13,12 @@ public class Booking implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private Long sessionId;
+
+    @Column(nullable = false)
+    private Long studentId;
+
+    @Column(nullable = false)
     private String tutorId;
 
     @Column(nullable = false)
@@ -20,8 +27,8 @@ public class Booking implements Serializable {
     @Column(nullable = false)
     private String subject;
 
-    @Column(nullable = false)
-    private double amount;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
 
     @Column(nullable = false)
     private String bookingDate;
@@ -38,8 +45,15 @@ public class Booking implements Serializable {
     public Booking() {
     }
 
-    public Booking(String tutorId, String tutorName, String subject, double amount,
-                   String bookingDate, String bookingTime, String sessionType, String status) {
+    public Booking(
+            String tutorId,
+            String tutorName,
+            String subject,
+            BigDecimal amount,
+            String bookingDate,
+            String bookingTime,
+            String sessionType,
+            String status) {
         this.tutorId = tutorId;
         this.tutorName = tutorName;
         this.subject = subject;
@@ -56,6 +70,22 @@ public class Booking implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(Long sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
     public String getTutorId() {
@@ -82,11 +112,11 @@ public class Booking implements Serializable {
         this.subject = subject;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

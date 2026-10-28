@@ -1,7 +1,6 @@
 package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "subjects")
@@ -10,11 +9,6 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subjectId;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @Column(unique = true, nullable = false)
     private String code;
@@ -36,14 +30,6 @@ public class Subject {
 
     public Long getSubjectId() {
         return subjectId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void setSubjectId(Long subjectId) {

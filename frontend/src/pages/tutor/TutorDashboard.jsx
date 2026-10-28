@@ -53,7 +53,7 @@ function TutorDashboard() {
                             Keep track of your tutoring sessions and
                             upcoming learning activities.
                         </p>
-                        <Link to="/my-sessions">
+                        <Link to="/sessions">
                             View sessions →
                         </Link>
                     </div>

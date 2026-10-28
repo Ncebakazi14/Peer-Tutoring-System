@@ -3,6 +3,7 @@ package za.ac.cput.peertutoringsystem.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import za.ac.cput.peertutoringsystem.model.Booking;
 import za.ac.cput.peertutoringsystem.service.BookingService;
 
@@ -20,19 +21,28 @@ public class BookingController {
     }
 
     @GetMapping("/bookings")
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        return ResponseEntity.ok(bookings);
     }
 
     @PostMapping("/bookings")
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
+    public ResponseEntity<Booking> createBooking(
+            @RequestBody Booking booking) {
+
         Booking createdBooking = bookingService.createBooking(booking);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdBooking);
     }
 
     @DeleteMapping("/bookings/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBooking(
+            @PathVariable Long id) {
+
         bookingService.deleteBooking(id);
+
         return ResponseEntity.noContent().build();
     }
 }

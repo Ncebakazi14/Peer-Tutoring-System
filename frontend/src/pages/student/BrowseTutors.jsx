@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TutorApi from '../../api/TutorApi';
@@ -38,10 +39,7 @@ function BrowseTutors() {
                         );
                     }
 
-                    console.error(
-                        'Failed to load tutor profiles:',
-                        err
-                    );
+                    console.error('Failed to load tutor profiles:', err);
                 }
             } finally {
                 if (isMounted) {
@@ -95,9 +93,7 @@ function BrowseTutors() {
                     {!loading && !error && (
                         <span className="tutor-count">
                             {tutors.length}{' '}
-                            {tutors.length === 1
-                                ? 'profile'
-                                : 'profiles'}
+                            {tutors.length === 1 ? 'profile' : 'profiles'}
                         </span>
                     )}
                 </div>
@@ -140,8 +136,10 @@ function BrowseTutors() {
                             const lastName = tutor.lastName?.trim() || '';
                             const fullName =
                                 `${firstName} ${lastName}`.trim() || 'Tutor';
+
                             const initials =
                                 `${firstName.charAt(0)}${lastName.charAt(0)}`
+                                    .trim()
                                     .toUpperCase() || 'T';
 
                             return (
@@ -160,14 +158,20 @@ function BrowseTutors() {
                                     </div>
 
                                     <div className="tutor-card-content">
-                                        <h3>{tutor.qualification}</h3>
+                                        <h3>
+                                            {tutor.qualification ||
+                                                'Qualification not provided'}
+                                        </h3>
 
                                         <div className="tutor-detail">
                                             <span className="tutor-detail-label">
                                                 About
                                             </span>
 
-                                            <p>{tutor.bio}</p>
+                                            <p>
+                                                {tutor.bio ||
+                                                    'No biography provided.'}
+                                            </p>
                                         </div>
 
                                         <div className="tutor-detail">
@@ -175,7 +179,10 @@ function BrowseTutors() {
                                                 Availability
                                             </span>
 
-                                            <p>{tutor.availability}</p>
+                                            <p>
+                                                {tutor.availability ||
+                                                    'Availability not provided.'}
+                                            </p>
                                         </div>
                                     </div>
                                 </article>

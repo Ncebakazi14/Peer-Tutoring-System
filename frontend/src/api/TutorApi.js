@@ -28,11 +28,6 @@ const TutorApi = {
         return response.data;
     },
 
-    getMyTutorProfile: async () => {
-        const response = await api.get('/tutor-profiles/mine');
-        return response.data;
-    },
-
     // Retrieve all subjects.
     getAllSubjects: async () => {
         const response = await api.get('/subjects');

@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,8 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    List<Session> findByStatusAndTopicContainingIgnoreCase(SessionStatus status, String topic);
+
+    List<Session> findByStatusAndTopicContainingIgnoreCase(
+            SessionStatus status, String topic);
 
     List<Session> findByStartTimeAfter(LocalDateTime now);
-}
 
+    // Find sessions created by a specific user.
+    List<Session> findByOwnerUserId(Long ownerUserId);
+}

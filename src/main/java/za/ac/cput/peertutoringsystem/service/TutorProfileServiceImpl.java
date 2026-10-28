@@ -1,12 +1,12 @@
+
 package za.ac.cput.peertutoringsystem.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import za.ac.cput.peertutoringsystem.domain.Role;
+
 import za.ac.cput.peertutoringsystem.domain.TutorProfile;
 import za.ac.cput.peertutoringsystem.domain.User;
 import za.ac.cput.peertutoringsystem.dto.TutorProfileResponseDTO;
-import za.ac.cput.peertutoringsystem.exception.ForbiddenOperationException;
 import za.ac.cput.peertutoringsystem.repository.TutorProfileRepository;
 import za.ac.cput.peertutoringsystem.repository.UserRepository;
 
@@ -28,13 +28,18 @@ public class TutorProfileServiceImpl implements TutorProfileService {
     @Override
     @Transactional
     public TutorProfile create(TutorProfile tutorProfile, String email) {
-        User user = getTutorUser(email);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("User not found"));
 
         if (tutorProfileRepository.findByUserEmail(email).isPresent()) {
-            throw new IllegalStateException("You already have a tutor profile");
+            throw new IllegalStateException(
+                    "You already have a tutor profile");
         }
 
         tutorProfile.setUser(user);
+
         return tutorProfileRepository.save(tutorProfile);
     }
 
@@ -53,33 +58,38 @@ public class TutorProfileServiceImpl implements TutorProfileService {
     @Override
     @Transactional
     public TutorProfile update(TutorProfile tutorProfile, String email) {
-        getTutorUser(email);
-        TutorProfile existingProfile = tutorProfileRepository.findByUserEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "You do not have a tutor profile yet"));
+
+        TutorProfile existingProfile =
+                tutorProfileRepository.findByUserEmail(email)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "You do not have a tutor profile yet"));
 
         if (tutorProfile.getId() != null
                 && !tutorProfile.getId().equals(existingProfile.getId())) {
-            throw new ForbiddenOperationException(
+            throw new IllegalArgumentException(
                     "You cannot update another tutor's profile");
         }
 
         existingProfile.setBio(tutorProfile.getBio());
         existingProfile.setQualification(tutorProfile.getQualification());
         existingProfile.setAvailability(tutorProfile.getAvailability());
+
         return tutorProfileRepository.save(existingProfile);
     }
 
     @Override
     @Transactional
     public void delete(Long id, String email) {
-        getTutorUser(email);
-        TutorProfile existingProfile = tutorProfileRepository.findByUserEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Tutor profile not found"));
+
+        TutorProfile existingProfile =
+                tutorProfileRepository.findByUserEmail(email)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tutor profile not found"));
 
         if (!existingProfile.getId().equals(id)) {
-            throw new ForbiddenOperationException(
+            throw new IllegalArgumentException(
                     "You cannot delete another tutor's profile");
         }
 
@@ -89,29 +99,32 @@ public class TutorProfileServiceImpl implements TutorProfileService {
     @Override
     @Transactional(readOnly = true)
     public List<TutorProfileResponseDTO> getAll() {
-        return tutorProfileRepository.findAll().stream()
+
+        return tutorProfileRepository.findAll()
+                .stream()
                 .map(profile -> {
-                    User user = profile.getUser();
+                    String firstName = "";
+                    String lastName = "";
+
+                    if (profile.getUser() != null) {
+                        if (profile.getUser().getFirstName() != null) {
+                            firstName = profile.getUser().getFirstName();
+                        }
+
+                        if (profile.getUser().getLastName() != null) {
+                            lastName = profile.getUser().getLastName();
+                        }
+                    }
+
                     return new TutorProfileResponseDTO(
                             profile.getId(),
-                            user == null ? "" : user.getFirstName(),
-                            user == null ? "" : user.getLastName(),
+                            firstName,
+                            lastName,
                             profile.getQualification(),
                             profile.getBio(),
-                            profile.getAvailability());
+                            profile.getAvailability()
+                    );
                 })
                 .toList();
-    }
-
-    private User getTutorUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        if (user.getRole() != Role.TUTOR) {
-            throw new ForbiddenOperationException(
-                    "Only tutor accounts can manage tutor profiles");
-        }
-
-        return user;
     }
 }

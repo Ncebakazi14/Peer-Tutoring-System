@@ -26,6 +26,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        // Registration and login are public endpoints.
+        return path.equals("/api/auth")
+                || path.startsWith("/api/auth/");
+    }
+
+    @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -38,32 +47,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authorizationHeader != null
                 && authorizationHeader.startsWith("Bearer ")) {
 
-            String token =
-                    authorizationHeader.substring(7);
+            String token = authorizationHeader.substring(7);
 
-            if (jwtUtil.isTokenValid(token)) {
+            try {
+                if (jwtUtil.isTokenValid(token)) {
+                    String email = jwtUtil.extractEmail(token);
+                    String role = jwtUtil.extractRole(token);
 
-                String email =
-                        jwtUtil.extractEmail(token);
+                    if (role != null && !role.isBlank()) {
+                        SimpleGrantedAuthority authority =
+                                new SimpleGrantedAuthority("ROLE_" + role);
 
-                String role =
-                        jwtUtil.extractRole(token);
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(
+                                        email,
+                                        null,
+                                        Collections.singletonList(authority)
+                                );
 
-                SimpleGrantedAuthority authority =
-                        new SimpleGrantedAuthority(
-                                "ROLE_" + role
-                        );
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                Collections.singletonList(authority)
-                        );
-
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authentication);
+                        SecurityContextHolder.getContext()
+                                .setAuthentication(authentication);
+                    }
+                }
+            } catch (io.jsonwebtoken.JwtException
+                     | IllegalArgumentException ex) {
+                // Do not authenticate a request with an invalid token.
+                SecurityContextHolder.clearContext();
             }
         }
 

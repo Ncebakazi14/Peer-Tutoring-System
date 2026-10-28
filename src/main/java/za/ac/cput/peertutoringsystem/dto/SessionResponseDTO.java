@@ -1,7 +1,10 @@
+
 package za.ac.cput.peertutoringsystem.dto;
 
+import za.ac.cput.peertutoringsystem.domain.PricingType;
 import za.ac.cput.peertutoringsystem.domain.SessionStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class SessionResponseDTO {
@@ -18,6 +21,8 @@ public class SessionResponseDTO {
     private int currentStudents;
     private SessionStatus status;
     private String topic;
+    private PricingType pricingType;
+    private BigDecimal price;
 
     public Long getSessionId() {
         return sessionId;
@@ -114,5 +119,20 @@ public class SessionResponseDTO {
     public void setTopic(String topic) {
         this.topic = topic;
     }
-}
 
+    public PricingType getPricingType() {
+        return pricingType;
+    }
+
+    public void setPricingType(PricingType pricingType) {
+        this.pricingType = pricingType;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+}

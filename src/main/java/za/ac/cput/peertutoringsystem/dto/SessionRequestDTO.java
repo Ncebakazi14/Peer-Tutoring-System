@@ -1,9 +1,14 @@
+
 package za.ac.cput.peertutoringsystem.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import za.ac.cput.peertutoringsystem.domain.PricingType;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class SessionRequestDTO {
@@ -28,6 +33,14 @@ public class SessionRequestDTO {
 
     @NotBlank
     private String topic;
+
+    @NotNull
+    private PricingType pricingType;
+
+    @NotNull
+    @DecimalMin(value = "0.01",
+            message = "Price must be greater than zero.")
+    private BigDecimal price;
 
     public Long getTutorProfileId() {
         return tutorProfileId;
@@ -92,5 +105,20 @@ public class SessionRequestDTO {
     public void setTopic(String topic) {
         this.topic = topic;
     }
-}
 
+    public PricingType getPricingType() {
+        return pricingType;
+    }
+
+    public void setPricingType(PricingType pricingType) {
+        this.pricingType = pricingType;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+}

@@ -1,3 +1,4 @@
+
 package za.ac.cput.peertutoringsystem.domain;
 
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ public class TutorProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Link this tutor profile to its registered user.
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
