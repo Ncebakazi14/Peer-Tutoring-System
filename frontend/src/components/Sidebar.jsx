@@ -1,6 +1,7 @@
 ﻿
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
+import { I, icons } from "./icons";
 
 function Sidebar() {
     const navigate = useNavigate();
@@ -50,42 +51,42 @@ function Sidebar() {
     const studentNavItems = [
         {
             to: "/student/dashboard",
-            icon: "🏠",
+            icon: "dashboard",
             label: "Dashboard",
         },
         {
             to: "/student/profile",
-            icon: "👤",
+            icon: "profile",
             label: "My Profile",
         },
         {
             to: "/tutors",
-            icon: "🎓",
+            icon: "browse",
             label: "Browse Tutors",
         },
         {
             to: "/sessions",
-            icon: "📚",
+            icon: "sessions",
             label: "My Sessions",
         },
         {
             to: "/bookings",
-            icon: "📅",
+            icon: "bookings",
             label: "My Bookings",
         },
         {
             to: "/reviews",
-            icon: "⭐",
+            icon: "reviews",
             label: "My Reviews",
         },
         {
             to: "/messages",
-            icon: "💬",
+            icon: "messages",
             label: "Messages",
         },
         {
             to: "/settings",
-            icon: "⚙️",
+            icon: "settings",
             label: "Settings",
         },
     ];
@@ -93,37 +94,37 @@ function Sidebar() {
     const tutorNavItems = [
         {
             to: "/tutor/dashboard",
-            icon: "🏠",
+            icon: "dashboard",
             label: "Dashboard",
         },
         {
             to: "/tutor/profile",
-            icon: "👤",
+            icon: "profile",
             label: "My Tutor Profile",
         },
         {
             to: "/sessions",
-            icon: "📚",
+            icon: "sessions",
             label: "My Sessions",
         },
         {
             to: "/bookings",
-            icon: "📅",
+            icon: "bookings",
             label: "Booking Requests",
         },
         {
             to: "/subjects",
-            icon: "🎓",
+            icon: "subjects",
             label: "My Subjects",
         },
         {
             to: "/messages",
-            icon: "💬",
+            icon: "messages",
             label: "Messages",
         },
         {
             to: "/settings",
-            icon: "⚙️",
+            icon: "settings",
             label: "Settings",
         },
     ];
@@ -155,7 +156,7 @@ function Sidebar() {
                         }
                     >
                         <span className="nav-icon" aria-hidden="true">
-                            {item.icon}
+                            <I size={18}>{icons[item.icon]}</I>
                         </span>
                         <span>{item.label}</span>
                     </NavLink>
@@ -169,7 +170,7 @@ function Sidebar() {
                     onClick={handleLogout}
                 >
                     <span className="nav-icon" aria-hidden="true">
-                        🚪
+                        <I size={18}>{icons.logout}</I>
                     </span>
                     <span>Logout</span>
                 </button>

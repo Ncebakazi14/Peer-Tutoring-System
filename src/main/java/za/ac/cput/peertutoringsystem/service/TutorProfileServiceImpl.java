@@ -33,9 +33,14 @@ public class TutorProfileServiceImpl implements TutorProfileService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found"));
 
-        if (tutorProfileRepository.findByUserEmail(email).isPresent()) {
-            throw new IllegalStateException(
-                    "You already have a tutor profile");
+        var existingProfile = tutorProfileRepository.findByUserEmail(email);
+
+        if (existingProfile.isPresent()) {
+            TutorProfile profile = existingProfile.get();
+            profile.setBio(tutorProfile.getBio());
+            profile.setQualification(tutorProfile.getQualification());
+            profile.setAvailability(tutorProfile.getAvailability());
+            return tutorProfileRepository.save(profile);
         }
 
         tutorProfile.setUser(user);

@@ -82,6 +82,13 @@ function Login({ onRegister }) {
 
             // Save the token only after validating the token and role.
             localStorage.setItem('token', result.token);
+            localStorage.setItem('user', JSON.stringify({
+                id: result.userId,
+                firstName: result.firstName || '',
+                lastName: result.lastName || '',
+                email: result.email || email.trim(),
+                role,
+            }));
 
             if (role === 'TUTOR') {
                 window.location.href = '/tutor/dashboard';

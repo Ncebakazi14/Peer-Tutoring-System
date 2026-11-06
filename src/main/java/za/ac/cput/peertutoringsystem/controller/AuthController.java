@@ -3,6 +3,9 @@ package za.ac.cput.peertutoringsystem.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import za.ac.cput.peertutoringsystem.domain.User;
 import za.ac.cput.peertutoringsystem.dto.AuthResponse;
@@ -67,6 +70,38 @@ public class AuthController {
                 user.getRole().name()
         );
 
-        return new AuthResponse(token);
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole().name()
+        );
+    }
+
+    @GetMapping("/me")
+    public AuthResponse me(@AuthenticationPrincipal String email) {
+        if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "A valid login session is required"
+            );
+        }
+
+        User user = service.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "The logged-in user could not be found"
+                ));
+
+        return new AuthResponse(
+                null,
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }

@@ -4,6 +4,8 @@ package za.ac.cput.peertutoringsystem.controller;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import za.ac.cput.peertutoringsystem.domain.TutorProfile;
 import za.ac.cput.peertutoringsystem.dto.TutorProfileResponseDTO;
@@ -27,6 +29,7 @@ public class TutorProfileController {
             @Valid @RequestBody TutorProfile tutorProfile,
             @AuthenticationPrincipal String email) {
 
+        requireAuthenticatedUser(email);
         return tutorProfileService.create(tutorProfile, email);
     }
 
@@ -35,6 +38,7 @@ public class TutorProfileController {
     public TutorProfile getMyProfile(
             @AuthenticationPrincipal String email) {
 
+        requireAuthenticatedUser(email);
         return tutorProfileService.getMyProfile(email);
     }
 
@@ -50,6 +54,7 @@ public class TutorProfileController {
             @Valid @RequestBody TutorProfile tutorProfile,
             @AuthenticationPrincipal String email) {
 
+        requireAuthenticatedUser(email);
         return tutorProfileService.update(tutorProfile, email);
     }
 
@@ -59,7 +64,17 @@ public class TutorProfileController {
             @PathVariable Long id,
             @AuthenticationPrincipal String email) {
 
+        requireAuthenticatedUser(email);
         tutorProfileService.delete(id, email);
+    }
+
+    private void requireAuthenticatedUser(String email) {
+        if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "A valid login session is required"
+            );
+        }
     }
 
     // Return all profiles with tutor names for Browse Tutors.

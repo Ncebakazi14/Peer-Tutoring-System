@@ -32,5 +32,7 @@ export const icons = {
   trash: <><path d="M3 6h18" /><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /></>,
   eye: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></>,
   x: <path d="M18 6 6 18M6 6l12 12" />,
+  check: <path d="m5 12 4 4L19 6" />,
+  arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
   cap: <><path d="M2 9.5 12 4l10 5.5L12 15z" /><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5" /><path d="M22 9.5V15" /></>,
 };
