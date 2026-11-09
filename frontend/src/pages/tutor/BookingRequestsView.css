@@ -1,0 +1,136 @@
+.booking-requests-view {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.booking-requests-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.booking-requests-heading h1 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.booking-requests-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.booking-request-count {
+    border-radius: 999px;
+    padding: 10px 14px;
+    color: #4338ca;
+    background: #eef2ff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.booking-request-list {
+    display: grid;
+    gap: 16px;
+}
+
+.booking-request-card,
+.booking-request-state {
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 26px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.booking-request-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.booking-request-status {
+    display: inline-block;
+    margin-bottom: 9px;
+    border-radius: 999px;
+    padding: 5px 10px;
+    color: #047857;
+    background: #ecfdf5;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.booking-request-card h2 {
+    margin: 0 0 7px;
+    color: #0f172a;
+    font-size: 19px;
+}
+
+.booking-request-card p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.booking-request-student {
+    color: #334155 !important;
+    font-weight: 700;
+}
+
+.booking-request-details {
+    display: grid;
+    min-width: 130px;
+    gap: 5px;
+    text-align: right;
+}
+
+.booking-request-details span {
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.booking-request-details strong {
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-size: 15px;
+}
+
+.booking-request-state {
+    color: #64748b;
+    text-align: center;
+}
+
+.booking-request-state h2 {
+    margin: 5px 0 8px;
+    color: #0f172a;
+    font-size: 20px;
+}
+
+.booking-request-state p {
+    margin: 0;
+}
+
+.booking-request-error {
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+@media (max-width: 650px) {
+    .booking-requests-heading,
+    .booking-request-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .booking-request-details {
+        width: 100%;
+        text-align: left;
+    }
+}

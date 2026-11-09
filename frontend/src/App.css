@@ -186,6 +186,42 @@ form {
     color: #94a3b8;
 }
 
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper input {
+    padding-right: 48px;
+}
+
+.password-visibility-button {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    color: #64748b;
+    background: transparent;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.password-visibility-button:hover {
+    color: #1769d1;
+    background: #eff6ff;
+}
+
+.password-visibility-button:focus-visible {
+    outline: 3px solid rgba(23, 105, 209, 0.18);
+    outline-offset: 1px;
+}
+
 /* ================================
    ROLE DROPDOWN
    ================================ */

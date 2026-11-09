@@ -56,6 +56,7 @@ function getUserRole(token) {
 function Login({ onRegister }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -145,15 +146,26 @@ function Login({ onRegister }) {
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            autoComplete="current-password"
-                            required
-                        />
+                        <div className="password-input-wrapper">
+                            <input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="current-password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-visibility-button"
+                                onClick={() => setShowPassword((visible) => !visible)}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                aria-pressed={showPassword}
+                            >
+                                <I size={19}>{showPassword ? icons.eyeOff : icons.eye}</I>
+                            </button>
+                        </div>
                     </div>
 
                     <div className="login-options">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
+import { I, icons } from '../components/icons';
 
 function Register({ onLogin }) {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ function Register({ onLogin }) {
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -167,15 +169,26 @@ function Register({ onLogin }) {
 
                     <div className="form-group">
                         <label htmlFor="registerPassword">Password</label>
-                        <input
-                            id="registerPassword"
-                            name="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            autoComplete="new-password"
-                            required
-                        />
+                        <div className="password-input-wrapper">
+                            <input
+                                id="registerPassword"
+                                name="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={formData.password}
+                                onChange={handleChange}
+                                autoComplete="new-password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-visibility-button"
+                                onClick={() => setShowPassword((visible) => !visible)}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                aria-pressed={showPassword}
+                            >
+                                <I size={19}>{showPassword ? icons.eyeOff : icons.eye}</I>
+                            </button>
+                        </div>
                     </div>
 
                     <div className="form-group">
