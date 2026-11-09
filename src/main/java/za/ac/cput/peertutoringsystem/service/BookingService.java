@@ -54,6 +54,17 @@ public class BookingService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<Booking> getTutorBookingRequests() {
+        Long tutorId = getAuthenticatedUserId();
+
+        return bookingRepository.findAll()
+                .stream()
+                .filter(booking -> String.valueOf(tutorId)
+                        .equals(booking.getTutorId()))
+                .toList();
+    }
+
     public Booking createBooking(Booking booking) {
         Long studentId = getAuthenticatedUserId();
 

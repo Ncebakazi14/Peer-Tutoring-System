@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react';
+import bookingApi from '../services/bookingApi';
+import sessionApi from '../services/sessionApi';
 import './Reviews.css';
 
-const API_URL = 'http://localhost:8080/api/reviews';
-const PROFILE_URL = 'http://localhost:8080/api/tutor-profiles/mine';
+const API_URL = '/api/reviews';
 
 function getHeaders() {
     const token = localStorage.getItem('token');
@@ -106,6 +107,8 @@ export default function Reviews() {
     const [comment, setComment] = useState('');
     const [anonymous, setAnonymous] = useState(false);
     const [reviews, setReviews] = useState([]);
+    const [bookedSessions, setBookedSessions] = useState([]);
+    const [bookingsLoading, setBookingsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -186,6 +189,44 @@ export default function Reviews() {
             cancelled = true;
         };
     }, [isTutor]);
+
+    useEffect(() => {
+        if (isTutor) return;
+
+        let cancelled = false;
+        async function loadBookedSessions() {
+            setBookingsLoading(true);
+            try {
+                const response = await bookingApi.getMy();
+                const bookings = Array.isArray(response.data) ? response.data : [];
+                const enriched = await Promise.all(bookings.map(async (booking) => {
+                    const sessionResponse = await sessionApi.getById(booking.sessionId);
+                    return { ...booking, session: sessionResponse.data };
+                }));
+                if (!cancelled) {
+                    setBookedSessions(enriched);
+                    if (enriched.length === 1) selectBooking(enriched[0]);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    setMessage(
+                        error.response?.data?.message ||
+                        'Could not load your booked sessions.'
+                    );
+                }
+            } finally {
+                if (!cancelled) setBookingsLoading(false);
+            }
+        }
+        loadBookedSessions();
+        return () => { cancelled = true; };
+    }, [isTutor]);
+
+    function selectBooking(booking) {
+        setSessionId(String(booking.sessionId));
+        setTutorProfileId(String(booking.session?.tutorProfileId || ''));
+        setMessage('');
+    }
 
     async function submitReview(event) {
         event.preventDefault();
@@ -283,38 +324,34 @@ export default function Reviews() {
 
                     <form className="review-form" onSubmit={submitReview}>
                         <div className="review-form-grid">
-                            <div className="review-field">
-                                <label htmlFor="tutorProfileId">
-                                    Tutor Profile ID
-                                </label>
-
-                                <input
-                                    id="tutorProfileId"
-                                    type="number"
-                                    min="1"
-                                    value={tutorProfileId}
-                                    onChange={(event) =>
-                                        setTutorProfileId(event.target.value)
-                                    }
-                                    placeholder="Enter tutor profile ID"
-                                    required
-                                />
-                            </div>
-
-                            <div className="review-field">
-                                <label htmlFor="sessionId">Session ID</label>
-
-                                <input
-                                    id="sessionId"
-                                    type="number"
-                                    min="1"
+                            <div className="review-field review-session-field">
+                                <label htmlFor="booking">Session to review</label>
+                                <select
+                                    id="booking"
                                     value={sessionId}
-                                    onChange={(event) =>
-                                        setSessionId(event.target.value)
-                                    }
-                                    placeholder="Enter session ID"
+                                    onChange={(event) => {
+                                        const booking = bookedSessions.find(
+                                            (item) => String(item.sessionId) === event.target.value
+                                        );
+                                        if (booking) selectBooking(booking);
+                                    }}
                                     required
-                                />
+                                    disabled={bookingsLoading || bookedSessions.length === 0}
+                                >
+                                    <option value="">
+                                        {bookingsLoading
+                                            ? 'Loading your booked sessions...'
+                                            : 'Select a booked session'}
+                                    </option>
+                                    {bookedSessions.map((booking) => (
+                                        <option key={booking.id} value={booking.sessionId}>
+                                            {booking.subject || 'Tutoring session'} with {booking.tutorName} ({booking.bookingDate})
+                                        </option>
+                                    ))}
+                                </select>
+                                <small>
+                                    Your tutor and session details are filled in automatically.
+                                </small>
                             </div>
                         </div>
 

@@ -1,77 +1,92 @@
 
 .settings-page {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 32px 24px;
-  color: #172554;
+  padding: 38px 42px;
+  color: #1e293b;
+}
+
+.settings-loading {
+  min-height: 300px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  font-size: 14px;
 }
 
 .settings-heading {
-  margin-bottom: 26px;
+  margin-bottom: 32px;
 }
 
 .settings-eyebrow {
-  margin-bottom: 8px;
-  color: #2563eb;
-  font-size: 12px;
+  margin: 0 0 8px;
+  color: #4f46e5;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
 }
 
 .settings-heading h1 {
   margin: 0 0 8px;
+  color: #0f172a;
   font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .settings-heading > p:last-child {
   margin: 0;
   color: #64748b;
+  font-size: 14px;
 }
 
 .settings-card {
   margin-bottom: 24px;
   border: 1px solid #e2e8f0;
-  border-radius: 15px;
-  padding: 24px;
+  border-radius: 24px;
+  padding: 30px;
   background: #fff;
-  box-shadow: 0 8px 28px rgb(15 23 42 / 4%);
+  box-shadow: 0 8px 28px rgb(15 23 42 / 5%);
 }
 
 .settings-card-heading {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .settings-icon {
   display: grid;
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   place-items: center;
-  border-radius: 12px;
-  color: #1d4ed8;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  color: #2563eb;
   background: #eff6ff;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .settings-card-heading h2 {
   margin: 0 0 5px;
-  color: #1e293b;
-  font-size: 19px;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 750;
 }
 
 .settings-card-heading p {
   margin: 0;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .settings-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 18px;
 }
 
 .settings-field {
@@ -84,56 +99,75 @@
 
 .settings-field label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
   color: #334155;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .settings-field input {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
-  padding: 12px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
   color: #0f172a;
   background: #fff;
-  font: inherit;
+  font-size: 13px;
   outline: none;
 }
 
 .settings-field input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 12%);
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgb(79 70 229 / 12%);
 }
 
 .settings-field input[readonly] {
-  background: #f1f5f9;
+  background: #f8fafc;
   color: #64748b;
+}
+
+.settings-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #0f172a;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.settings-field textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgb(79 70 229 / 12%);
 }
 
 .settings-field small {
   display: block;
   margin-top: 7px;
   color: #64748b;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .settings-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 18px;
+  margin-top: 26px;
+  padding-top: 20px;
   border-top: 1px solid #e2e8f0;
 }
 
 .settings-actions button {
   border: 0;
-  border-radius: 9px;
-  padding: 12px 20px;
+  border-radius: 12px;
+  padding: 12px 22px;
   color: #fff;
   background: #2563eb;
-  font: inherit;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -149,9 +183,9 @@
 
 .settings-alert {
   margin-bottom: 18px;
-  border-radius: 9px;
+  border-radius: 14px;
   padding: 13px 16px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .settings-alert.error {
@@ -166,11 +200,12 @@
 
 @media (max-width: 600px) {
   .settings-page {
-    padding: 22px 14px;
+    padding: 26px 18px;
   }
 
   .settings-card {
-    padding: 18px;
+    padding: 22px;
+    border-radius: 20px;
   }
 
   .settings-form-grid {

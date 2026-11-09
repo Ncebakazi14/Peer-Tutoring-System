@@ -26,6 +26,11 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+    @GetMapping("/bookings/requests")
+    public ResponseEntity<List<Booking>> getBookingRequests() {
+        return ResponseEntity.ok(bookingService.getTutorBookingRequests());
+    }
+
     @PostMapping("/bookings")
     public ResponseEntity<Booking> createBooking(
             @RequestBody Booking booking) {

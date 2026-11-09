@@ -322,14 +322,17 @@ export default function MySessions() {
                     </div>
 
                     <div className="form-group">
-                        <label>
+                        <label className="online-session-toggle">
                             <input
                                 type="checkbox"
                                 name="isOnline"
                                 checked={form.isOnline}
                                 onChange={updateField}
                             />
-                            {' '}This is an online session
+                            <span className="online-session-checkbox" aria-hidden="true">
+                                <span />
+                            </span>
+                            <span>This is an online session</span>
                         </label>
                     </div>
 

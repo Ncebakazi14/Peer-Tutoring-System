@@ -87,11 +87,169 @@
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .tutor-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.09);
+}
+
+.tutor-card:focus-visible {
+    outline: 3px solid rgba(79, 70, 229, 0.3);
+    outline-offset: 3px;
+}
+
+.tutor-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.48);
+}
+
+.tutor-detail-modal {
+    position: relative;
+    width: min(720px, 100%);
+    max-height: min(760px, 90vh);
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+}
+
+.tutor-detail-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    border: 0;
+    color: #64748b;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tutor-detail-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.tutor-detail-modal-header h2 {
+    margin: 4px 0;
+    color: #0f172a;
+    font-size: 24px;
+}
+
+.tutor-detail-modal-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.tutor-detail-modal-body {
+    padding: 28px;
+}
+
+.tutor-detail-block {
+    margin-bottom: 18px;
+}
+
+.tutor-detail-block span,
+.tutor-detail-modal-body h3 {
+    display: block;
+    margin-bottom: 7px;
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+.tutor-detail-block p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.tutor-detail-modal-body h3 {
+    margin-top: 26px;
+    color: #0f172a;
+    font-size: 18px;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.tutor-session-list {
+    display: grid;
+    gap: 10px;
+}
+
+.tutor-session {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+.tutor-session div {
+    display: grid;
+    gap: 4px;
+}
+
+.tutor-session strong {
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.tutor-session span {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.tutor-session button {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 13px;
+    color: #ffffff;
+    background: #4f46e5;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.tutor-session button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.tutor-session-empty,
+.booking-message {
+    margin: 0;
+    padding: 14px;
+    border-radius: 12px;
+    color: #475569;
+    background: #f8fafc;
+    font-size: 12px;
+}
+
+.booking-message {
+    margin-bottom: 12px;
+    color: #047857;
+    background: #ecfdf5;
 }
 
 .tutor-card-top {

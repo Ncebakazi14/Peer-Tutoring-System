@@ -139,7 +139,7 @@ export default function TutorDashboard() {
                     <h1>Welcome back, {firstName}</h1>
                     <p>Manage your profile, teaching sessions and subjects from one place.</p>
                 </div>
-                <Link to="/sessions/new" className="tutor-dashboard-primary-action">
+                <Link to="/sessions" className="tutor-dashboard-primary-action">
                     <I size={17}>{icons.plus}</I>
                     Create session
                 </Link>
@@ -238,7 +238,7 @@ export default function TutorDashboard() {
                         <div><I size={22}>{icons.sessions}</I></div>
                         <h3>No upcoming sessions yet</h3>
                         <p>Create a session slot so students can find and book your availability.</p>
-                        <Link to="/sessions/new">Create your first session</Link>
+                        <Link to="/sessions">Create your first session</Link>
                     </div>
                 ) : (
                     <div className="tutor-dashboard-session-list">

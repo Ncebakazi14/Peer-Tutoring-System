@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import authService from '../services/authService';
+import { I, icons } from '../components/icons';
 
 function getUserRole(token) {
     try {
@@ -118,7 +119,9 @@ function Login({ onRegister }) {
     return (
         <div className="login-page">
             <div className="login-card">
-                <div className="login-logo">🎓</div>
+                <div className="login-logo" aria-hidden="true">
+                    <I size={38}>{icons.cap}</I>
+                </div>
 
                 <h1>Peer Tutoring</h1>
 

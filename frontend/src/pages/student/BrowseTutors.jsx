@@ -2,12 +2,19 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TutorApi from '../../api/TutorApi';
+import sessionApi from '../../services/sessionApi';
+import bookingApi from '../../services/bookingApi';
 import './BrowseTutors.css';
 
 function BrowseTutors() {
     const [tutors, setTutors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [selectedTutor, setSelectedTutor] = useState(null);
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [bookingId, setBookingId] = useState(null);
+    const [bookingMessage, setBookingMessage] = useState('');
 
     useEffect(() => {
         let isMounted = true;
@@ -54,6 +61,52 @@ function BrowseTutors() {
             isMounted = false;
         };
     }, []);
+
+    async function openTutor(tutor) {
+        setSelectedTutor(tutor);
+        setSessions([]);
+        setBookingMessage('');
+        setSessionsLoading(true);
+
+        try {
+            const response = await sessionApi.getAll();
+            const availableSessions = (Array.isArray(response.data) ? response.data : [])
+                .filter((session) => String(session.tutorProfileId) === String(tutor.id))
+                .filter((session) => !['COMPLETED', 'CANCELLED'].includes(session.status));
+            setSessions(availableSessions);
+        } catch (requestError) {
+            setBookingMessage(
+                requestError.response?.data?.message ||
+                'Could not load this tutor’s sessions.'
+            );
+        } finally {
+            setSessionsLoading(false);
+        }
+    }
+
+    async function bookSession(session) {
+        setBookingId(session.sessionId);
+        setBookingMessage('');
+
+        try {
+            await bookingApi.create({ sessionId: session.sessionId });
+            setBookingMessage('Session booked successfully. You can view it under My Bookings.');
+        } catch (requestError) {
+            setBookingMessage(
+                requestError.response?.data?.message ||
+                'Could not book this session.'
+            );
+        } finally {
+            setBookingId(null);
+        }
+    }
+
+    const formatDateTime = (value) => value
+        ? new Date(value).toLocaleString('en-ZA', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        })
+        : 'Time to be confirmed';
 
     return (
         <div className="browse-tutors-page">
@@ -146,6 +199,14 @@ function BrowseTutors() {
                                 <article
                                     className="tutor-card"
                                     key={tutor.id}
+                                    onClick={() => openTutor(tutor)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter' || event.key === ' ') {
+                                            openTutor(tutor);
+                                        }
+                                    }}
                                 >
                                     <div className="tutor-card-top">
                                         <div className="tutor-avatar">
@@ -191,6 +252,90 @@ function BrowseTutors() {
                     </div>
                 )}
             </section>
+
+            {selectedTutor && (
+                <div className="tutor-detail-overlay" role="presentation" onClick={() => setSelectedTutor(null)}>
+                    <section
+                        className="tutor-detail-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="selected-tutor-name"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            className="tutor-detail-close"
+                            onClick={() => setSelectedTutor(null)}
+                            aria-label="Close tutor details"
+                        >
+                            ×
+                        </button>
+                        <div className="tutor-detail-modal-header">
+                            <div className="tutor-avatar">
+                                {(selectedTutor.firstName?.[0] || '') +
+                                    (selectedTutor.lastName?.[0] || '') || 'T'}
+                            </div>
+                            <div>
+                                <span className="browse-tutors-label">TUTOR PROFILE</span>
+                                <h2 id="selected-tutor-name">
+                                    {`${selectedTutor.firstName || ''} ${selectedTutor.lastName || ''}`.trim() || 'Tutor'}
+                                </h2>
+                                <p>{selectedTutor.qualification || 'Qualification not provided'}</p>
+                            </div>
+                        </div>
+
+                        <div className="tutor-detail-modal-body">
+                            <div className="tutor-detail-block">
+                                <span>About</span>
+                                <p>{selectedTutor.bio || 'No biography provided.'}</p>
+                            </div>
+                            <div className="tutor-detail-block">
+                                <span>Availability</span>
+                                <p>{selectedTutor.availability || 'Availability not provided.'}</p>
+                            </div>
+
+                            <h3>Available sessions</h3>
+                            {bookingMessage && (
+                                <p className="booking-message" role="status">{bookingMessage}</p>
+                            )}
+                            {sessionsLoading ? (
+                                <p className="tutor-session-empty">Loading sessions...</p>
+                            ) : sessions.length === 0 ? (
+                                <p className="tutor-session-empty">
+                                    This tutor has no available sessions at the moment.
+                                </p>
+                            ) : (
+                                <div className="tutor-session-list">
+                                    {sessions.map((session) => (
+                                        <div className="tutor-session" key={session.sessionId}>
+                                            <div>
+                                                <strong>{session.topic || 'Tutoring session'}</strong>
+                                                <span>{formatDateTime(session.startTime)} - {formatDateTime(session.endTime)}</span>
+                                                <span>
+                                                    {session.isOnline ? 'Online' : session.location || 'Location to be confirmed'}
+                                                    {' · '}
+                                                    {session.currentStudents}/{session.maxStudents} booked
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => bookSession(session)}
+                                                disabled={bookingId === session.sessionId || session.currentStudents >= session.maxStudents}
+                                            >
+                                                {bookingId === session.sessionId
+                                                    ? 'Booking...'
+                                                    : session.currentStudents >= session.maxStudents
+                                                        ? 'Full'
+                                                        : 'Book session'}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                </div>
+            )}
         </div>
     );
 }

@@ -56,10 +56,7 @@ function StudentProfile() {
 
     const handleSave = async () => {
         try {
-            const updatedStudent = await StudentApi.updateStudent(
-                student.studentId,
-                student
-            );
+            const updatedStudent = await StudentApi.updateStudent(student);
 
             setStudent({
                 ...updatedStudent,
@@ -121,7 +118,7 @@ function StudentProfile() {
                         className="edit-profile-btn"
                         onClick={() => setEditing(true)}
                     >
-                        Γ£Å Edit Profile
+                        Edit Profile
                     </button>
                 )}
 

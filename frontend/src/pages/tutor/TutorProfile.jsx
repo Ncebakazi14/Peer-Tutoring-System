@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { I, icons } from '../../components/icons';
+import sharedApi from '../../services/api';
 import './TutorProfile.css';
 
 const api = axios.create({
@@ -63,32 +64,40 @@ export default function TutorProfile() {
 
         async function loadMyProfile() {
             try {
-                const [response, userResponse] = await Promise.all([
-                    api.get('/tutor-profiles/mine'),
-                    api.get('/auth/me'),
+                const [profileResult, userResult] = await Promise.allSettled([
+                    sharedApi.get('/tutor-profiles/mine'),
+                    sharedApi.get('/auth/me'),
                 ]);
 
                 if (!active) return;
 
-                const existingProfile = response.data;
-                const currentUser = userResponse.data;
+                const existingProfile = profileResult.status === 'fulfilled'
+                    ? profileResult.value.data
+                    : readCachedTutorProfile();
+                const currentUser = userResult.status === 'fulfilled'
+                    ? userResult.value.data
+                    : readStoredUser();
 
-                setUser(currentUser);
-                localStorage.setItem('user', JSON.stringify({
-                    id: currentUser.userId,
-                    firstName: currentUser.firstName || '',
-                    lastName: currentUser.lastName || '',
-                    email: currentUser.email || '',
-                    role: currentUser.role || 'TUTOR',
-                }));
+                if (currentUser) {
+                    setUser(currentUser);
+                    localStorage.setItem('user', JSON.stringify({
+                        id: currentUser.userId ?? currentUser.id,
+                        firstName: currentUser.firstName || '',
+                        lastName: currentUser.lastName || '',
+                        email: currentUser.email || '',
+                        role: currentUser.role || 'TUTOR',
+                    }));
+                }
 
                 if (existingProfile?.id != null) {
                     setProfileId(existingProfile.id);
-                    setProfile({
+                    const loadedProfile = {
                         bio: existingProfile.bio || '',
                         qualification: existingProfile.qualification || '',
                         availability: existingProfile.availability || '',
-                    });
+                    };
+                    setProfile(loadedProfile);
+                    cacheTutorProfile(existingProfile.id, loadedProfile);
                 }
             } catch (err) {
                 if (!active) return;
@@ -140,15 +149,23 @@ export default function TutorProfile() {
             }
 
             const response = profileId !== null
-                ? await api.put('/tutor-profiles', { id: profileId, ...profileToSave })
-                : await api.post('/tutor-profiles', profileToSave);
+                ? await sharedApi.put('/tutor-profiles', { id: profileId, ...profileToSave })
+                : await sharedApi.post('/tutor-profiles', profileToSave);
 
-            setProfileId(response.data.id);
+            const savedProfile = response.data || {};
+            const savedProfileId = savedProfile.id ?? profileId;
+
+            if (savedProfileId == null) {
+                throw new Error('The server did not return the saved tutor profile.');
+            }
+
+            setProfileId(savedProfileId);
             setProfile({
-                bio: response.data.bio || '',
-                qualification: response.data.qualification || '',
-                availability: response.data.availability || '',
+                bio: savedProfile.bio ?? profileToSave.bio,
+                qualification: savedProfile.qualification ?? profileToSave.qualification,
+                availability: savedProfile.availability ?? profileToSave.availability,
             });
+            cacheTutorProfile(savedProfileId, profileToSave);
             setMessage('Your professional tutor profile has been saved successfully.');
         } catch (err) {
             setError(getApiErrorMessage(
@@ -180,6 +197,30 @@ export default function TutorProfile() {
                 </div>
             </div>
         );
+    }
+
+    function readStoredUser() {
+        try {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        } catch {
+            return null;
+        }
+    }
+
+    function readCachedTutorProfile() {
+        try {
+            return JSON.parse(localStorage.getItem('tutorProfile') || 'null');
+        } catch {
+            return null;
+        }
+    }
+
+    function cacheTutorProfile(id, profile) {
+        try {
+            localStorage.setItem('tutorProfile', JSON.stringify({ id, ...profile }));
+        } catch {
+            // The backend remains the source of truth when local storage is unavailable.
+        }
     }
 
     return (
