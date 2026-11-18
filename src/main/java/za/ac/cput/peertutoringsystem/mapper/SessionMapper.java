@@ -10,6 +10,7 @@ public final class SessionMapper {
 
     public static SessionResponseDTO toResponseDTO(Session session) {
         SessionResponseDTO dto = new SessionResponseDTO();
+
         dto.setSessionId(session.getSessionId());
         dto.setTutorProfileId(session.getTutorProfileId());
         dto.setOwnerUserId(session.getOwnerUserId());
@@ -22,7 +23,11 @@ public final class SessionMapper {
         dto.setCurrentStudents(session.getCurrentStudents());
         dto.setStatus(session.getStatus());
         dto.setTopic(session.getTopic());
+
+        // Pricing information
+        dto.setPricingType(session.getPricingType());
+        dto.setPrice(session.getPrice());
+
         return dto;
     }
 }
-

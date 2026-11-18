@@ -1,9 +1,10 @@
 import api from './api';
 
 const bookingApi = {
-  getMy: () => api.get('/bookings/my'),
+  getMy: () => api.get('/bookings'),
+  getRequests: () => api.get('/bookings/requests'),
   create: (data) => api.post('/bookings', data),
-  updateStatus: (id, status) => api.put(`/bookings/${id}/status`, { status }),
+  remove: (id) => api.delete(`/bookings/${id}`),
 };
 
 export default bookingApi;
